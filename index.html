@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#801C7D">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Sales Buddy | SBI General</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- STATIC, BULLETPROOF CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+
+    <!-- CSV Parser & PDF Generators -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- CUSTOM STATIC STYLES -->
+    <style>
+        :root {
+            --sbiPurple: #801C7D;
+            --sbiBlue: #00A9E0;
+            --sbiDark: #212529;
+            --sbiLight: #F7F7F7;
+            --footerDark: #1c2127;
+            --simba: #f27421;
+        }
+
+        /* Branding Colors */
+        .text-sbiPurple { color: var(--sbiPurple); }
+        .text-sbiBlue { color: var(--sbiBlue); }
+        .text-sbiDark { color: var(--sbiDark); }
+        .text-sbiLight { color: var(--sbiLight); }
+        
+        .bg-sbiPurple { background-color: var(--sbiPurple); }
+        .bg-sbiBlue { background-color: var(--sbiBlue); }
+        .bg-sbiDark { background-color: var(--sbiDark); }
+        .bg-sbiLight { background-color: var(--sbiLight); }
+        .bg-footerDark { background-color: var(--footerDark); }
+        .bg-simba { background-color: var(--simba); }
+
+        .border-sbiPurple { border-color: var(--sbiPurple); }
+        .border-sbiBlue { border-color: var(--sbiBlue); }
+        .border-l-sbiPurple { border-left-color: var(--sbiPurple); }
+        .border-l-sbiBlue { border-left-color: var(--sbiBlue); }
+
+        /* SBI Brand Gradient Classes */
+        .bg-sbi-gradient {
+            background: linear-gradient(135deg, var(--sbiPurple) 0%, var(--sbiBlue) 100%);
+        }
+        
+        .text-sbi-gradient {
+            background: linear-gradient(135deg, var(--sbiPurple) 0%, var(--sbiBlue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Extended Color Overrides */
+        .text-orange-500 { color: #f97316; }
+        .bg-orange-50 { background-color: #fff7ed; }
+        .bg-orange-100 { background-color: #ffedd5; }
+        .bg-orange-200 { background-color: #fed7aa; }
+        .border-orange-100 { border-color: #ffedd5; }
+        .border-orange-200 { border-color: #fed7aa; }
+        .border-l-orange-500 { border-left-color: #f97316; }
+        .active\:bg-orange-600:active { background-color: #ea580c; }
+
+        .text-teal-500 { color: #14b8a6; }
+        .bg-teal-50 { background-color: #f0fdfa; }
+        .border-l-teal-500 { border-left-color: #14b8a6; }
+
+        /* Custom Sizing & Spacing */
+        ::selection { background-color: var(--sbiBlue); color: white; }
+        .min-h-100dvh { min-height: 100vh; min-height: 100dvh; }
+        
+        .text-8px { font-size: 8px; }
+        .text-9px { font-size: 9px; line-height: 1.4; } 
+        .text-10px { font-size: 10px; }
+        .text-15px { font-size: 15px; }
+        .text-26px { font-size: 26px; }
+        .tracking-02em { letter-spacing: 0.2em; }
+        
+        .gap-3-5 { gap: 0.875rem; }
+        .p-1-5 { padding: 0.375rem; }
+        .p-3-5 { padding: 0.875rem; }
+        
+        .max-h-180px { max-height: 180px; }
+        @media (min-width: 768px) {
+            .md-max-h-240px { max-height: 240px; }
+        }
+
+        /* Interactions */
+        .active-scale-98:active { transform: scale(0.98); }
+
+        ::-webkit-scrollbar { display: none; }
+        body { 
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+            -webkit-tap-highlight-color: transparent; 
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .glass-card { 
+            background: #ffffff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02); 
+        }
+    </style>
+</head>
+<body class="bg-sbiLight text-sbiDark font-sans antialiased overflow-x-hidden selection:bg-sbiBlue selection:text-white flex flex-col min-h-100dvh">
+
+    <!-- APP HEADER -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-white shadow-sm border-b border-gray-100 h-16 flex items-center hidden">
+        <div class="px-3 md:px-4 w-full max-w-3xl mx-auto flex justify-between items-center">
+            
+            <div class="flex flex-col justify-center cursor-pointer" onclick="navigateTo('homeView')">
+                <span class="font-extrabold text-sbi-gradient text-lg md:text-xl leading-none tracking-tight">Sales Buddy</span>
+                <span class="font-bold text-gray-400 text-9px uppercase tracking-02em mt-0.5">One Touch Point</span>
+            </div>
+            
+            <div class="flex items-center gap-1.5 md:gap-2">
+                <a href="https://dip.sbigeneral.in/Login/LoginSBI" target="_blank" class="bg-simba active:bg-orange-600 text-white px-3.5 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold shadow flex items-center gap-1.5 md:gap-2 transition-colors tracking-wide">
+                    <i class="fas fa-sign-in-alt"></i> SIMBA
+                </a>
+                <a href="https://www.sbigeneral.in/endorsement" target="_blank" rel="noopener noreferrer" class="bg-sbi-gradient text-white px-3.5 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold shadow flex items-center gap-1.5 md:gap-2 transition-transform active:scale-95 tracking-wide">
+                    <i class="fas fa-edit"></i> Endorse
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <main id="app-container" class="flex-grow flex flex-col pt-16">
+        
+        <!-- 0. WELCOME / LOGIN VIEW -->
+        <div id="welcomeScreenView" class="app-view flex flex-col items-center justify-center min-h-[80vh] px-5 w-full max-w-3xl mx-auto transition-opacity duration-300 absolute top-0 left-0 right-0 bottom-0 bg-sbiLight z-40 -mt-16 pt-16">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 w-full text-center max-w-md">
+                <div class="w-16 h-16 bg-purple-50 text-sbiPurple rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border-2 border-purple-100">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h1 class="text-2xl font-extrabold text-sbiDark tracking-tight mb-2">Welcome to Sales Buddy</h1>
+                <p class="text-sm text-gray-500 mb-6 leading-relaxed">Enter your Professional Name to Access portal</p>
+                
+                <div class="text-left mb-3">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide ml-1">Your Full Name</label>
+                    <input type="text" id="userNameInput" placeholder="e.g. John Doe" class="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold outline-none focus:border-sbiPurple focus:ring-1 focus:ring-sbiPurple transition-all text-center">
+                </div>
+                
+                <!-- Disclaimer -->
+                <div class="text-left bg-purple-50 p-3 rounded-lg border border-purple-100 mb-5">
+                    <p class="text-9px font-semibold text-sbiPurple leading-normal text-center">
+                        <i class="fas fa-info-circle mr-1"></i> <strong>Important:</strong> The name provided will be locked for the entire day and cannot be modified. This exact name will automatically appear on all Quotes generated today, so please ensure it is entered accurately.
+                    </p>
+                </div>
+
+                <p id="nameError" class="text-xs text-red-500 hidden mb-4 font-medium"><i class="fas fa-exclamation-circle"></i> Please enter a valid name (minimum 3 alphabetical characters; no numbers or special symbols).</p>
+                
+                <!-- Main CTA -->
+                <button onclick="saveAndEnter()" class="w-full bg-sbi-gradient text-white px-5 py-3 rounded-xl text-sm font-bold shadow-md active:scale-98 transition-transform flex justify-center items-center gap-2">
+                    Enter Dashboard <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 1. DASHBOARD (HOME VIEW) -->
+        <div id="homeView" class="app-view hidden flex flex-col flex-grow transition-opacity duration-300 w-full max-w-3xl mx-auto">
+
+            <div class="px-5 flex-grow mt-6">
+                
+                <div class="mb-6">
+                    <h1 id="greeting-title" class="text-26px font-extrabold text-sbiDark tracking-tight">Welcome!</h1>
+                    <p class="text-sm text-gray-500 mt-1.5 leading-relaxed">Have a productive day! Please select a module below to proceed.</p>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <div class="glass-card p-3-5 rounded-2xl active-scale-98 transition-transform cursor-pointer border-l-4 border-l-sbiBlue flex items-center gap-3-5" onclick="navigateTo('quotePageView')">
+                        <div class="w-11 h-11 bg-blue-50 text-sbiBlue rounded-full flex items-center justify-center text-lg flex-shrink-0"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div>
+                            <h3 class="text-15px font-bold text-gray-900 leading-tight">Quick Quote</h3>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                    </div>
+                    
+                    <div class="glass-card p-3-5 rounded-2xl active-scale-98 transition-transform cursor-pointer border-l-4 border-l-sbiPurple flex items-center gap-3-5" onclick="openCalculator('emi_calculator.html', 'homeView')">
+                        <div class="w-11 h-11 bg-purple-50 text-sbiPurple rounded-full flex items-center justify-center text-lg flex-shrink-0"><i class="fas fa-calculator"></i></div>
+                        <div>
+                            <h3 class="text-15px font-bold text-gray-900 leading-tight">EMI Calculator</h3>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                    </div>
+
+                    <div class="glass-card p-3-5 rounded-2xl active-scale-98 transition-transform cursor-pointer border-l-4 border-l-green-500 flex items-center gap-3-5" onclick="initCashlessView()">
+                        <div class="w-11 h-11 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-lg flex-shrink-0"><i class="fas fa-hospital-user"></i></div>
+                        <div>
+                            <h3 class="text-15px font-bold text-gray-900 leading-tight">Cashless Hospitals</h3>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                    </div>
+                    
+                    <div class="glass-card p-3-5 rounded-2xl active-scale-98 transition-transform cursor-pointer border-l-4 border-l-orange-500 flex items-center gap-3-5" onclick="navigateTo('downloadsPageView')">
+                        <div class="w-11 h-11 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center text-lg flex-shrink-0"><i class="fas fa-download"></i></div>
+                        <div>
+                            <h3 class="text-15px font-bold text-gray-900 leading-tight">Resource Downloads</h3>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-8 bg-footerDark pt-4 pb-5 px-5 w-full rounded-t-2xl">
+                <div class="w-full max-w-md mx-auto">
+                    <h3 class="text-sbiBlue font-semibold text-sm mb-3">Customer Applications</h3>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <a href="https://apps.apple.com/in/app/sbi-general-insurance/id1495616048" target="_blank" class="bg-white text-black py-2 px-2 rounded-lg flex items-center justify-center gap-2 active:bg-gray-200 transition-colors">
+                            <i class="fab fa-apple text-2xl"></i>
+                            <div class="text-left flex flex-col justify-center">
+                                <span class="text-8px uppercase font-bold leading-none text-gray-600">Download on</span>
+                                <span class="text-xs font-bold leading-tight mt-0.5">App Store</span>
+                            </div>
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.sbig.insurance&hl=en_IN" target="_blank" class="bg-white text-black py-2 px-2 rounded-lg flex items-center justify-center gap-2 active:bg-gray-200 transition-colors">
+                            <i class="fab fa-google-play text-xl text-green-500"></i>
+                            <div class="text-left flex flex-col justify-center">
+                                <span class="text-8px uppercase font-bold leading-none text-gray-600">Get it on</span>
+                                <span class="text-xs font-bold leading-tight mt-0.5">Google Play</span>
+                            </div>
+                        </a>
+                    </div>
+                    <button onclick="shareCustomerAppWA()" class="w-full bg-transparent border border-gray-600 text-gray-300 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 active:bg-white/10 transition-colors">
+                        <i class="fab fa-whatsapp text-lg"></i> Share App Links via WhatsApp
+                    </button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 2. QUOTE PAGE VIEW -->
+        <div id="quotePageView" class="app-view hidden flex-grow px-5 pt-6 transition-opacity duration-300 w-full max-w-3xl mx-auto">
+            <button onclick="navigateTo('homeView')" class="mb-5 bg-white text-gray-600 active:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 shadow-sm border border-gray-100 w-max">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            <div class="mb-5">
+                <h2 class="text-2xl font-bold text-sbiDark mb-1">Select Product</h2>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <div onclick="openCalculator('super_health.html', 'quotePageView')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 active:bg-blue-50 transition-colors border-l-4 border-l-sbiBlue flex items-center gap-3-5 cursor-pointer">
+                    <div class="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-shield-alt text-lg text-sbiBlue"></i></div>
+                    <h3 class="text-15px font-bold text-sbiDark">Super Health</h3>
+                    <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                </div>
+                
+                <div onclick="openCalculator('health_alpha.html', 'quotePageView')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 active:bg-purple-50 transition-colors border-l-4 border-l-sbiPurple flex items-center gap-3-5 cursor-pointer">
+                    <div class="w-11 h-11 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-heartbeat text-lg text-sbiPurple"></i></div>
+                    <h3 class="text-15px font-bold text-sbiDark">Health Alpha - Select</h3>
+                    <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                </div>
+
+                <div onclick="openCalculator('super_top_up.html', 'quotePageView')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 active:bg-teal-50 transition-colors border-l-4 border-l-teal-500 flex items-center gap-3-5 cursor-pointer">
+                    <div class="w-11 h-11 bg-teal-50 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-layer-group text-lg text-teal-500"></i></div>
+                    <h3 class="text-15px font-bold text-sbiDark">Super Top-Up</h3>
+                    <i class="fas fa-chevron-right text-gray-300 ml-auto text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. CASHLESS HOSPITAL VIEW -->
+        <div id="cashlessView" class="app-view hidden flex-grow px-5 pt-6 transition-opacity duration-300 flex flex-col h-full w-full max-w-3xl mx-auto">
+            <button onclick="navigateTo('homeView')" class="mb-4 bg-white text-gray-600 active:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 shadow-sm border border-gray-100 w-max shrink-0">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            
+            <div class="mb-4 shrink-0">
+                <h2 class="text-2xl font-bold text-sbiDark mb-1">Network Hospitals</h2>
+            </div>
+
+            <!-- Pre-loader & Upload State -->
+            <div id="cashlessStateContainer" class="flex-grow flex items-center justify-center mb-8">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Main Interactive Search Interface -->
+            <div id="cashlessSearchContainer" class="hidden flex-grow flex flex-col h-full pb-4">
+                
+                <!-- Category Form -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-4 shrink-0 flex flex-col gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">Search Category</label>
+                        <select id="searchCategory" onchange="toggleCategoryFields()" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm font-semibold outline-none focus:border-sbiPurple text-sbiPurple transition-colors shadow-sm">
+                            <option value="pan_india">🌐 Pan India (Search All)</option>
+                            <option value="state">📍 State Wise</option>
+                            <option value="district">🏢 District Wise</option>
+                            <option value="city">🏙️ City Wise</option>
+                        </select>
+                    </div>
+
+                    <div id="wrapper_text" class="transition-all">
+                        <input type="text" id="hospSearchText" placeholder="Enter Hospital Name, City, or Pincode..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-sbiBlue transition-colors">
+                    </div>
+
+                    <div id="wrapper_state" class="hidden transition-all">
+                        <select id="stateSelect" onchange="updateDependentDropdowns('state')" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-sbiBlue">
+                            <option value="">Select State...</option>
+                        </select>
+                    </div>
+
+                    <div id="wrapper_district" class="hidden transition-all">
+                        <select id="districtSelect" onchange="updateDependentDropdowns('district')" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-sbiBlue">
+                            <option value="">Select District...</option>
+                        </select>
+                    </div>
+
+                    <div id="wrapper_city" class="hidden transition-all">
+                        <select id="citySelect" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-sbiBlue">
+                            <option value="">Select City...</option>
+                        </select>
+                    </div>
+
+                    <button onclick="executeSearch()" class="w-full bg-sbiDark text-white py-3 rounded-xl text-sm font-bold shadow-md active:bg-black transition-colors mt-1 flex items-center justify-center gap-2">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+
+                <!-- Action Bar -->
+                <div id="actionButtons" class="flex gap-3 mb-4 shrink-0 hidden">
+                    <button onclick="downloadHospitalsPDF()" class="flex-1 bg-sbiBlue text-white py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-sm">
+                        <i class="fas fa-file-pdf"></i> Download PDF
+                    </button>
+                    <button onclick="shareHospitalsWA()" class="flex-1 bg-green-500 text-white py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-sm">
+                        <i class="fab fa-whatsapp text-lg"></i> Share PDF
+                    </button>
+                </div>
+
+                <!-- Results Area -->
+                <div id="resultsWrapper" class="flex-grow relative overflow-hidden flex flex-col hidden">
+                    <p class="text-xs text-gray-500 mb-2 font-medium flex justify-between items-center">
+                        <span>Found: <span id="hospCount" class="font-bold text-sbiDark">0</span> matches</span>
+                        <span id="previewNote" class="text-9px uppercase text-sbiBlue font-bold bg-blue-50 px-2 py-0.5 rounded">Preview Mode</span>
+                    </p>
+                    <div id="hospitalsContainer" class="flex-grow overflow-y-auto pb-6 flex flex-col gap-3">
+                        <!-- Cards injected via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- 4. IFRAME CALCULATOR VIEW -->
+        <div id="calculatorView" class="app-view hidden flex-grow flex flex-col bg-white transition-opacity duration-300">
+            <div class="w-full max-w-3xl mx-auto bg-white border-b border-gray-100 shadow-sm z-10 px-4 py-2 flex items-center">
+                <button onclick="navigateTo(currentCalcBackTarget)" class="text-gray-700 font-medium flex items-center gap-2 p-2 -ml-2 rounded-lg">
+                    <i class="fas fa-arrow-left"></i> <span id="calcBackBtnText" class="text-sm">Back</span>
+                </button>
+            </div>
+            <div class="w-full flex-grow relative bg-gray-50">
+                <div id="calcLoader" class="absolute inset-0 flex justify-center items-center z-0"><i class="fas fa-spinner fa-spin text-3xl text-sbiBlue"></i></div>
+                <iframe id="calcFrame" src="" class="absolute inset-0 w-full h-full border-none bg-transparent" onload="document.getElementById('calcLoader').classList.add('hidden')"></iframe>
+            </div>
+        </div>
+
+        <!-- 5. DOWNLOADS CATEGORY VIEW -->
+        <div id="downloadsPageView" class="app-view hidden flex-grow px-5 pt-6 transition-opacity duration-300 w-full max-w-3xl mx-auto">
+            <button onclick="navigateTo('homeView')" class="mb-5 bg-white text-gray-600 active:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 shadow-sm border border-gray-100 w-max"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="mb-5"><h2 class="text-2xl font-bold text-sbiDark mb-1">Downloads</h2></div>
+            <div class="flex flex-col gap-3 pb-8">
+                <button onclick="openDownloadCategory('Important Lists', 'list')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-teal-500"><i class="fas fa-list-check text-teal-500 text-lg"></i> <h3 class="font-bold text-15px">Important Lists</h3></button>
+                <button onclick="openDownloadCategory('Brochures', 'brochure')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-sbiBlue"><i class="fas fa-book-open text-sbiBlue text-lg"></i> <h3 class="font-bold text-15px">Brochures</h3></button>
+                <button onclick="openDownloadCategory('Proposal Forms', 'proposal')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-sbiPurple"><i class="fas fa-file-signature text-sbiPurple text-lg"></i> <h3 class="font-bold text-15px">Proposal Forms</h3></button>
+                <button onclick="openDownloadCategory('Policy Wordings', 'policy')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-green-500"><i class="fas fa-file-contract text-green-500 text-lg"></i> <h3 class="font-bold text-15px">Policy Wordings</h3></button>
+                <button onclick="openDownloadCategory('Claim Forms', 'claim')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-red-500"><i class="fas fa-file-medical text-red-500 text-lg"></i> <h3 class="font-bold text-15px">Claim Forms</h3></button>
+                <button onclick="openDownloadCategory('Other Forms', 'other')" class="bg-white rounded-2xl p-3-5 shadow-sm border border-gray-100 flex items-center gap-3-5 text-left border-l-4 border-l-orange-500"><i class="fas fa-folder-open text-orange-500 text-lg"></i> <h3 class="font-bold text-15px">Other Forms</h3></button>
+            </div>
+        </div>
+
+        <!-- 6. DOWNLOADS LIST VIEW -->
+        <div id="downloadsListView" class="app-view hidden flex-grow px-5 pt-6 transition-opacity duration-300 w-full max-w-3xl mx-auto">
+            <button onclick="navigateTo('downloadsPageView')" class="mb-5 bg-white text-gray-600 active:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 shadow-sm border border-gray-100 w-max"><i class="fas fa-arrow-left"></i> Folders</button>
+            <div class="mb-2"><h2 id="downloadCategoryTitle" class="text-2xl font-bold text-sbiDark">Category</h2></div>
+            <div id="downloadFilesContainer" class="flex flex-col gap-3 pb-10"></div>
+        </div>
+    </main>
+
+    <script>
+        // --- MANDATORY GREETING & VALIDATION LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            checkUserAuth();
+        });
+
+        function checkUserAuth() {
+            const today = new Date().toDateString();
+            const savedName = localStorage.getItem("salesBuddyUserName");
+            const savedDate = localStorage.getItem("salesBuddyVisitDate");
+
+            if (savedName && savedDate === today) {
+                // User is verified for today - Show Dashboard
+                document.getElementById("greeting-title").innerText = "Welcome, " + savedName + "!";
+                
+                // Hide Welcome Screen, Show Home View & Nav Bar
+                document.querySelectorAll('.app-view').forEach(view => view.classList.add('hidden'));
+                document.getElementById('homeView').classList.remove('hidden');
+                document.getElementById('main-nav').classList.remove('hidden');
+                
+            } else {
+                // Not verified - Force Welcome Screen
+                document.querySelectorAll('.app-view').forEach(view => view.classList.add('hidden'));
+                document.getElementById('welcomeScreenView').classList.remove('hidden');
+                document.getElementById('main-nav').classList.add('hidden'); // Hide Top Nav
+                
+                // Auto-fill the previously saved name so the user doesn't have to retype it daily
+                if (savedName) {
+                    document.getElementById("userNameInput").value = savedName;
+                }
+            }
+        }
+
+        function saveAndEnter() {
+            const nameInput = document.getElementById("userNameInput").value.trim();
+            const errorText = document.getElementById("nameError");
+            
+            // REGEX EXPLANATION: 
+            // ^ = start, [A-Za-z\s] = allow upper/lowercase letters and spaces
+            // {3,} = minimum of 3 characters, $ = end of string
+            const nameValidationRegex = /^[A-Za-z\s]{3,}$/;
+
+            if (nameValidationRegex.test(nameInput)) {
+                // Name is valid
+                errorText.classList.add('hidden');
+                const today = new Date().toDateString();
+                
+                localStorage.setItem("salesBuddyUserName", nameInput);
+                localStorage.setItem("salesBuddyVisitDate", today);
+                
+                // Switch out of welcome screen
+                checkUserAuth();
+            } else {
+                // Name is invalid (numbers, special chars, or too short)
+                errorText.classList.remove('hidden');
+                
+                // Add a little shake animation for user feedback
+                const inputField = document.getElementById("userNameInput");
+                inputField.classList.add('border-red-500');
+                setTimeout(() => inputField.classList.remove('border-red-500'), 1000);
+            }
+        }
+
+        // --- EXISTING APP LOGIC BELOW ---
+        const shareOnWhatsApp = (text) => window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        let currentCalcBackTarget = 'homeView';
+
+        function navigateTo(viewId) {
+            // SECURITY CHECK: Do not allow navigation to homeView if they haven't bypassed the welcome screen today
+            if (viewId === 'homeView') {
+                const today = new Date().toDateString();
+                if (localStorage.getItem("salesBuddyVisitDate") !== today) {
+                    checkUserAuth(); // This forces them back to the welcome screen
+                    return; 
+                }
+            }
+
+            document.querySelectorAll('.app-view').forEach(view => view.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            if(viewId !== 'calculatorView') { 
+                document.getElementById('calcFrame').src = ''; 
+                document.body.classList.remove('overflow-hidden'); 
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openCalculator(url, backTarget = 'homeView') {
+            currentCalcBackTarget = backTarget;
+            document.getElementById('calcBackBtnText').innerText = backTarget === 'quotePageView' ? 'Products' : 'Dashboard';
+            document.getElementById('calcFrame').src = url; 
+            document.getElementById('calcLoader').classList.remove('hidden');
+            navigateTo('calculatorView');
+            document.body.classList.add('overflow-hidden'); 
+        }
+
+        // --- DOWNLOADS LOGIC ---
+        const docDatabase = {
+            'brochure': [{name: "Health Alpha", slug: "health_alpha_brochure"}, {name: "Super Health", slug: "super_health_brochure"}, {name: "Super Top-Up", slug: "super_top_up_brochure"}],
+            'proposal': [{name: "Health Alpha", slug: "health_alpha_proposal"}, {name: "Super Health", slug: "super_health_proposal"}, {name: "Super Top-Up", slug: "super_top_up_proposal"}],
+            'policy': [{name: "Health Alpha", slug: "health_alpha_policy"}, {name: "Super Health", slug: "super_health_policy"}, {name: "Super Top-Up", slug: "super_top_up_policy"}],
+            'claim': [{name: "Health Alpha", slug: "health_alpha_claim"}, {name: "Super Health", slug: "super_health_claim"}, {name: "Super Top-Up", slug: "super_top_up_claim"}],
+            'other': [{name: "AML Form", slug: "aml_form"}, {name: "Form 97", slug: "form_97"}],
+            'list': [
+                {group: "Common Lists", name: "Specific Waiting Period", slug: "specific_waiting_period", icon: "⏳"}, 
+                {group: "Common Lists", name: "Annexure II (Non-Payable Items)", slug: "annexure_ii", icon: "📄"}, 
+                {group: "Super Health Lists", name: "Health Multiplier", slug: "health_multiplier", icon: "✖️"}, 
+                {group: "Super Health Lists", name: "Medical Treatment Abroad", slug: "medical_abroad", icon: "✈️"},
+                {group: "Health Alpha Lists", name: "Adventure Sports", slug: "adventure_sports", icon: "🪂"},
+                {group: "Health Alpha Lists", name: "Gym and Sports Injury", slug: "gym_sports_injury", icon: "🏋️"},
+                {group: "Health Alpha Lists", name: "Global Coverage", slug: "health_alpha_global_cover", icon: "🌍"}
+            ]
+        };
+
+        function openDownloadCategory(catName, catSlug) {
+            navigateTo('downloadsListView');
+            document.getElementById('downloadCategoryTitle').innerText = catName;
+            const container = document.getElementById('downloadFilesContainer');
+            container.innerHTML = ''; 
+            
+            let currentGroup = "";
+
+            (docDatabase[catSlug] || []).forEach(item => {
+                if (item.group && item.group !== currentGroup) {
+                    currentGroup = item.group;
+                    container.innerHTML += `<h3 class="text-xs font-extrabold text-gray-400 uppercase tracking-wider mt-4 mb-1 pl-1">${currentGroup}</h3>`;
+                }
+
+                const serverFileName = item.slug + ".pdf";
+                const baseUrl = window.location.href.split('index.html')[0];
+                const fileUrl = baseUrl.endsWith('/') ? baseUrl + serverFileName : baseUrl + '/' + serverFileName;
+                const iconDisplay = item.icon ? `<div class="text-xl">${item.icon}</div>` : `<i class="fas fa-file-pdf text-red-500 text-lg"></i>`;
+
+                let singularCat = catName.replace(/s$/, '');
+                let cleanFileName = ['Other Forms', 'Important Lists'].includes(catName) 
+                    ? `${item.name}.pdf` 
+                    : `${item.name} ${singularCat}.pdf`;
+
+                const safeName = item.name.replace(/'/g, "\\'");
+                const safeGroup = (item.group || '').replace(/'/g, "\\'");
+                const safeCleanName = cleanFileName.replace(/'/g, "\\'");
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">${iconDisplay}</div>
+                            <div class="truncate"><h4 class="font-bold text-sm text-sbiDark truncate">${item.name}</h4></div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <a href="./${serverFileName}" download="${cleanFileName}" class="w-9 h-9 bg-gray-100 text-gray-700 rounded-full flex items-center justify-center"><i class="fas fa-download text-xs"></i></a>
+                            <button onclick="shareFileNative('${safeName}', '${catName}', '${fileUrl}', '${safeCleanName}', '${safeGroup}')" class="w-9 h-9 bg-green-50 text-green-600 rounded-full flex items-center justify-center"><i class="fab fa-whatsapp"></i></button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function shareFileNative(itemName, categoryName, fileUrl, cleanFileName, groupName) {
+            let shareText = "";
+            let baseFileName = cleanFileName.replace('.pdf', '');
+
+            if (groupName && groupName !== 'Common Lists') {
+                let prodName = groupName.replace(" Lists", "");
+                shareText = `*${prodName}*\n\nPlease find the official document for *${baseFileName}* attached.`;
+            } else if (categoryName !== 'Important Lists' && !['Other Forms'].includes(categoryName)) {
+                shareText = `*${itemName}*\n\nPlease find the official document for *${baseFileName}* attached.`;
+            } else {
+                shareText = `Please find the official document for *${baseFileName}* attached.`;
+            }
+
+            try {
+                const response = await fetch(fileUrl);
+                const blob = await response.blob();
+                
+                const file = new File([blob], cleanFileName, { type: 'application/pdf' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: itemName,
+                        text: shareText
+                    });
+                } else {
+                    alert("Your device browser doesn't support direct file sharing. The link will be shared instead.");
+                    shareOnWhatsApp(`${shareText}\n\n${fileUrl}`);
+                }
+            } catch (error) {
+                console.log('Error fetching or sharing file:', error);
+                shareOnWhatsApp(`${shareText}\n\n${fileUrl}`);
+            }
+        }
+        
+        function shareCustomerAppWA() {
+            const waText = `Download the official SBI General Customer App to manage your policies easily.\n\niOS: https://apps.apple.com/in/app/sbi-general-insurance/id1495616048\n\nAndroid: https://play.google.com/store/apps/details?id=com.sbig.insurance&hl=en_IN`;
+            shareOnWhatsApp(waText);
+        }
+
+        // --- CASHLESS HOSPITAL DYNAMIC MODULE ---
+        let allHospitals = [];
+        let filteredHospitals = [];
+
+        function initCashlessView() {
+            navigateTo('cashlessView');
+            if (allHospitals.length > 0) return;
+
+            const stateContainer = document.getElementById('cashlessStateContainer');
+            stateContainer.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin text-3xl mb-3 text-sbiBlue"></i><br><span class="text-sm font-medium">Looking for database...</span></div>';
+            
+            Papa.parse('./network_hospitals.csv', {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processHospitalData(results.data);
+                },
+                error: function() {
+                    renderUploadUI();
+                }
+            });
+        }
+
+        function renderUploadUI() {
+            const container = document.getElementById('cashlessStateContainer');
+            container.innerHTML = `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-200 text-center flex flex-col items-center gap-3 w-full">
+                    <div class="w-16 h-16 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center text-3xl shadow-sm border border-orange-100"><i class="fas fa-file-csv"></i></div>
+                    <h3 class="font-bold text-sbiDark text-lg leading-tight">Database Required</h3>
+                    <p class="text-sm text-gray-500 mb-2 leading-snug">The network hospital database file was not found in the repository. Please upload the valid CSV file to proceed.</p>
+                    <label class="bg-sbiBlue text-white px-6 py-3 rounded-xl text-sm font-bold cursor-pointer shadow-md active:bg-blue-600 transition-colors w-full">
+                        <i class="fas fa-upload mr-2"></i> Select CSV File
+                        <input type="file" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                    </label>
+                </div>
+            `;
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('cashlessStateContainer').innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fas fa-cog fa-spin text-3xl mb-3 text-sbiPurple"></i><br><span class="text-sm font-medium">Processing Database...</span></div>';
+
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processHospitalData(results.data);
+                },
+                error: function(err) {
+                    alert("Error parsing CSV file. Please make sure it's a valid standard CSV.");
+                    renderUploadUI();
+                }
+            });
+        }
+
+        function processHospitalData(data) {
+            allHospitals = data.map(row => ({
+                Name: row['Hospital Name'] || '',
+                Address: row['Address'] || '',
+                District: row['District '] || row['District'] || '',
+                City: row['City'] || '',
+                State: row['State'] || '',
+                Pincode: row['Pincode'] || ''
+            }));
+            
+            document.getElementById('cashlessStateContainer').classList.add('hidden');
+            document.getElementById('cashlessSearchContainer').classList.remove('hidden');
+            
+            populateBaseFilters();
+            toggleCategoryFields();
+        }
+
+        function toggleCategoryFields() {
+            const cat = document.getElementById('searchCategory').value;
+            
+            document.getElementById('wrapper_text').classList.add('hidden');
+            document.getElementById('wrapper_state').classList.add('hidden');
+            document.getElementById('wrapper_district').classList.add('hidden');
+            document.getElementById('wrapper_city').classList.add('hidden');
+
+            if(cat === 'pan_india') {
+                document.getElementById('wrapper_text').classList.remove('hidden');
+            } else if(cat === 'state') {
+                document.getElementById('wrapper_state').classList.remove('hidden');
+            } else if(cat === 'district') {
+                document.getElementById('wrapper_state').classList.remove('hidden');
+                document.getElementById('wrapper_district').classList.remove('hidden');
+            } else if(cat === 'city') {
+                document.getElementById('wrapper_state').classList.remove('hidden');
+                document.getElementById('wrapper_district').classList.remove('hidden');
+                document.getElementById('wrapper_city').classList.remove('hidden');
+            }
+
+            document.getElementById('resultsWrapper').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
+        }
+
+        function populateBaseFilters() {
+            const states = [...new Set(allHospitals.map(h => h.State).filter(Boolean))].sort();
+            const stateSelect = document.getElementById('stateSelect');
+            stateSelect.innerHTML = '<option value="">Select State...</option>';
+            states.forEach(s => stateSelect.add(new Option(s, s)));
+        }
+
+        function updateDependentDropdowns(levelChanged) {
+            const state = document.getElementById('stateSelect').value;
+            const distSelect = document.getElementById('districtSelect');
+            const citySelect = document.getElementById('citySelect');
+
+            if (levelChanged === 'state') {
+                distSelect.innerHTML = '<option value="">Select District...</option>';
+                citySelect.innerHTML = '<option value="">Select City...</option>';
+                if (state) {
+                    const districts = [...new Set(allHospitals.filter(h => h.State === state).map(h => h.District).filter(Boolean))].sort();
+                    districts.forEach(d => distSelect.add(new Option(d, d)));
+                }
+            } else if (levelChanged === 'district') {
+                const dist = distSelect.value;
+                citySelect.innerHTML = '<option value="">Select City...</option>';
+                if (state && dist) {
+                    const cities = [...new Set(allHospitals.filter(h => h.State === state && h.District === dist).map(h => h.City).filter(Boolean))].sort();
+                    cities.forEach(c => citySelect.add(new Option(c, c)));
+                }
+            }
+        }
+
+        function getSearchSummary() {
+            const cat = document.getElementById('searchCategory').value;
+            const term = document.getElementById('hospSearchText').value.trim();
+            const state = document.getElementById('stateSelect').value;
+            const dist = document.getElementById('districtSelect').value;
+            const city = document.getElementById('citySelect').value;
+
+            if (cat === 'pan_india') return term ? `Pan India (Keyword: "${term}")` : "Pan India (All)";
+            if (cat === 'state') return `State: ${state}`;
+            if (cat === 'district') return `District: ${dist} (${state})`;
+            if (cat === 'city') return `City: ${city} (${state})`;
+            return "Custom Search";
+        }
+
+        function executeSearch() {
+            const cat = document.getElementById('searchCategory').value;
+            const term = document.getElementById('hospSearchText').value.toLowerCase();
+            const state = document.getElementById('stateSelect').value;
+            const dist = document.getElementById('districtSelect').value;
+            const city = document.getElementById('citySelect').value;
+
+            if (cat === 'state' && !state) return alert("Please select a State to search.");
+            if (cat === 'district' && (!state || !dist)) return alert("Please select both State and District.");
+            if (cat === 'city' && (!state || !dist || !city)) return alert("Please select State, District, and City.");
+
+            filteredHospitals = allHospitals.filter(h => {
+                if (cat === 'pan_india') {
+                    if (!term) return true;
+                    return h.Name.toLowerCase().includes(term) || h.Pincode.includes(term) || h.City.toLowerCase().includes(term);
+                }
+                if (cat === 'state') return h.State === state;
+                if (cat === 'district') return h.State === state && h.District === dist;
+                if (cat === 'city') return h.State === state && h.District === dist && h.City === city;
+                return false;
+            });
+
+            renderGeneratedHospitals();
+        }
+
+        function renderGeneratedHospitals() {
+            document.getElementById('resultsWrapper').classList.remove('hidden');
+            const container = document.getElementById('hospitalsContainer');
+            document.getElementById('hospCount').innerText = filteredHospitals.length;
+            
+            if(filteredHospitals.length === 0) {
+                container.innerHTML = '<div class="text-center py-6 text-gray-400 text-sm">No network hospitals found matching your search.</div>';
+                document.getElementById('actionButtons').classList.add('hidden');
+                document.getElementById('previewNote').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('actionButtons').classList.remove('hidden');
+            const renderLimit = Math.min(filteredHospitals.length, 50);
+            document.getElementById('previewNote').classList.toggle('hidden', filteredHospitals.length <= 50);
+
+            let html = '';
+            for(let i=0; i<renderLimit; i++) {
+                const h = filteredHospitals[i];
+                html += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-1 border-l-4 border-l-sbiPurple">
+                        <h4 class="font-bold text-sbiDark text-sm leading-tight">${h.Name}</h4>
+                        <p class="text-xs text-gray-500 leading-snug"><i class="fas fa-map-marker-alt text-gray-300 w-3"></i> ${h.Address}</p>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[10px] font-medium uppercase">${h.City}</span>
+                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[10px] font-medium uppercase">${h.State} - ${h.Pincode}</span>
+                        </div>
+                    </div>`;
+            }
+            
+            if(filteredHospitals.length > 50) {
+                html += `<div class="text-center py-3 text-xs text-sbiBlue font-bold bg-blue-50 rounded-lg mt-2"><i class="fas fa-info-circle"></i> Showing 50 preview cards.<br>Download or Share PDF for the complete list of ${filteredHospitals.length} hospitals.</div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function getPDFDocument() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape');
+            
+            doc.setFontSize(18);
+            doc.setTextColor(128, 28, 125);
+            doc.text("SBI General - Cashless Network Hospitals", 14, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            
+            const searchSummary = getSearchSummary();
+            doc.text(`Generated on: ${new Date().toLocaleDateString()} | Criteria: ${searchSummary} | Total Matches: ${filteredHospitals.length}`, 14, 28);
+
+            const tableData = filteredHospitals.map(h => [h.Name, h.Address, h.City, h.District, h.State, h.Pincode]);
+            
+            doc.autoTable({
+                startY: 35,
+                head: [['Hospital Name', 'Address', 'City', 'District', 'State', 'Pincode']],
+                body: tableData,
+                theme: 'grid',
+                headStyles: { fillColor: [0, 169, 224] },
+                styles: { fontSize: 8, cellPadding: 3 },
+                columnStyles: { 0: { cellWidth: 50 }, 1: { cellWidth: 80 } }
+            });
+
+            return doc;
+        }
+
+        function downloadHospitalsPDF() {
+            if (filteredHospitals.length === 0) return alert("No results to download.");
+            const doc = getPDFDocument();
+            doc.save('Cashless Network Hospitals - SBI General.pdf');
+        }
+
+        async function shareHospitalsWA() {
+            if (filteredHospitals.length === 0) return alert("No results to share.");
+            
+            const searchSummary = getSearchSummary();
+            const waText = `*🏥 SBI General Insurance*\n*Cashless Network Hospitals*\n\n*Search Criteria:* ${searchSummary}\n*Total Hospitals Found:* ${filteredHospitals.length}\n\n_Please find the complete list attached as a PDF document._`;
+
+            const doc = getPDFDocument();
+            const pdfBlob = doc.output('blob');
+            const file = new File([pdfBlob], 'Cashless Network Hospitals - SBI General.pdf', { type: 'application/pdf' });
+            
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'SBI General Cashless Hospitals',
+                        text: waText,
+                    });
+                } catch (error) {
+                    console.log('Sharing failed or cancelled:', error);
+                }
+            } else {
+                alert("Your device browser doesn't support direct file sharing. The PDF will be downloaded instead so you can attach it manually.");
+                downloadHospitalsPDF();
+                setTimeout(() => { shareOnWhatsApp(waText); }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

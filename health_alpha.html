@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health Alpha Select - Professional Quote</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root { --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); --accent-color: #764ba2; --border-color: #e2e8f0; }
+        body { margin: 0; background: #f0f4f8; font-family: 'Segoe UI', sans-serif; padding-bottom: 40px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        .page-head { text-align: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 2px dashed #cbd5e1; }
+        .page-head h1 { font-size: 32px; font-weight: 900; color: #1e293b; margin: 0; letter-spacing: -0.5px; }
+        .page-head h1 span { color: var(--accent-color); }
+
+        .section-title { display: flex; align-items: center; margin-bottom: 16px; }
+        .section-title .tag { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--accent-color); background: rgba(118, 75, 162, 0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px;}
+        .section-title .divider { flex: 1; height: 2px; background: linear-gradient(to right, var(--border-color), transparent); margin-left: 12px;}
+        
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+        .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; } .col-8 { grid-column: span 8; } .col-12 { grid-column: span 12; }
+        @media (max-width: 768px) { .col-4, .col-6, .col-8 { grid-column: span 12; } }
+        
+        label { display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 12px 16px; font-size: 14px; border: 1px solid var(--border-color); border-radius: 12px; background: #f8fafc; color: #1e293b; transition: all 0.2s ease; appearance: none; }
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 40px; }
+        input:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(118,75,162,0.1); background: #fff; }
+        input[readonly] { cursor: not-allowed; background-color: #e2e8f0; opacity: 0.7; }
+
+        .input-error { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #ef4444 !important; }
+        .validation-msg { display: none; color: #ef4444; font-size: 11px; font-weight: 700; margin-top: 4px; }
+        
+        .toggle-wrapper { position: relative; background: #f8fafc; border-radius: 99px; padding: 4px; display: flex; border: 1px solid var(--border-color); cursor: pointer; height: 46px; }
+        .toggle-slider { position: absolute; background: #fff; border-radius: 99px; top: 4px; bottom: 4px; left: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
+        .toggle-option { flex: 1; text-align: center; z-index: 2; font-size: 12px; font-weight: 600; color: #64748b; display: flex; align-items: center; justify-content: center; border-radius: 99px; white-space: nowrap; padding: 0 5px; }
+        .toggle-option.active { color: var(--accent-color); font-weight: 800; }
+
+        .member-card { background: #fdfdfd; border: 1px dashed var(--border-color); border-radius: 12px; padding: 12px; }
+        .band-pill { display: inline-block; background: #1e293b; color: #fff; font-size: 11px; padding: 4px 10px; border-radius: 99px; font-weight: 700; margin-bottom: 8px; }
+
+        .actions { display: flex; gap: 12px; justify-content: center; margin-top: 10px; }
+        .btn { border: none; padding: 14px 24px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap:8px; }
+        .btn-primary { background: var(--primary-gradient); color: #fff; }
+        .btn-grey { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .btn-green { background: #10b981; color: white; width: 100%; margin-top: 10px; }
+        .btn-whatsapp { background: #25D366; color: white; width: 100%; margin-top: 10px; }
+
+        #results-container { display: none; margin-top: 40px; }
+        .results-header { text-align: center; margin-bottom: 20px; color: var(--accent-color); font-weight: 800; font-size: 20px; }
+        
+        .premium-breakdown-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .premium-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .p-card-header { padding: 15px 5px; text-align: center; color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; }
+        .header-purple { background: linear-gradient(135deg, #4a148c 0%, #764ba2 100%); }
+        .header-blue { background: linear-gradient(135deg, #0288d1 0%, #29b6f6 100%); }
+        .p-card-body { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .p-final-container { text-align: center; }
+        .p-final-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .p-final-amount { font-size: 22px; font-weight: 900; color: var(--accent-color); line-height: 1.2; }
+        .p-saved-box { background: #dcfce7; border-radius: 6px; padding: 6px; color: #166534; font-weight: 700; font-size: 11px; margin-top: 5px; }
+
+        .features-container { background: #fff; border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+        .feat-item { display: flex; flex-direction: column; gap: 4px; }
+        .feat-label { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px; }
+        .feat-val { font-size: 14px; color: #1e293b; font-weight: 600; }
+        .feat-icon { color: var(--accent-color); margin-bottom: 5px; font-size: 16px; }
+
+        .result-actions-bar { display: flex; gap: 20px; justify-content: center; max-width: 900px; margin-left: auto; margin-right: auto; }
+        @media (max-width: 600px) { .result-actions-bar { flex-direction: column; gap: 10px; } }
+
+        /* MODALS & OVERLAYS */
+        .custom-alert-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 10000; backdrop-filter: blur(3px); }
+        .custom-alert-box { background: #fff; padding: 25px; border-radius: 16px; text-align: center; max-width: 340px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .custom-alert-icon { font-size: 40px; color: #ef4444; margin-bottom: 15px; }
+        .custom-alert-msg { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 25px; line-height: 1.5; }
+        .custom-alert-btn { background: #1e293b; color: #fff; border: none; padding: 12px 35px; border-radius: 99px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.1s ease; width: 100%; }
+        .custom-alert-btn:active { transform: scale(0.96); }
+        @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* PDF STYLING */
+        #pdf-overlay-root { display: none; position: absolute; left: -9999px; }
+        .pdf-export-wrapper { width: 794px; background: white; margin: 0; padding: 0; line-height: 1.3;}
+        .pdf-cover-page { width: 794px; height: 1122px; overflow: hidden; }
+        .pdf-cover-page img { width: 100%; height: 100%; object-fit: contain; }
+        .pdf-page-container { width: 794px; height: 1122px; background-image: url('alphabackground.png'); background-size: 100% 100%; background-repeat: no-repeat; padding: 30px 30px 240px 30px; display: flex; flex-direction: column; }
+        .pdf-content-wrapper { background: rgba(255, 255, 255, 0.94); padding: 20px 25px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column; }
+        .pdf-header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #764ba2; padding-bottom: 5px; margin-bottom: 12px; }
+        .pdf-title-main { font-size: 16px; font-weight: 900; color: #764ba2; text-transform: uppercase; }
+        .pdf-subtitle { font-size: 10px; color: #475569; }
+        .pdf-details-tbl { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 9px; }
+        .pdf-details-tbl td { border: 1px solid rgba(203, 213, 225, 0.8); padding: 4px 6px; }
+        .pdf-details-tbl td.lbl { background: rgba(248, 250, 252, 0.9); font-weight: 700; color: #475569; width: 15%; }
+        .pdf-details-tbl td.val { width: 35%; font-weight: 600; color: #0f172a; background: rgba(255, 255, 255, 0.5); }
+        .pdf-sec-title { font-size: 9px; font-weight: 800; color: #1e293b; text-transform: uppercase; background: rgba(241, 245, 249, 0.9); padding: 4px 8px; border-left: 4px solid #764ba2; margin-bottom: 8px; }
+        .pdf-tier-table { width: 100%; border-collapse: separate; border-spacing: 3px; margin-bottom: 15px; }
+        .pdf-tier-table th { background: rgba(248, 250, 252, 0.95); border: 1px solid #cbd5e1; padding: 5px; font-size: 8px; font-weight: 800; color: #475569; text-transform: uppercase; border-radius: 4px; text-align: center;}
+        .pdf-tier-table td { border: 1px solid #764ba2; background: rgba(253, 253, 253, 0.95); padding: 5px; text-align: center; border-radius: 4px; vertical-align: middle; }
+        .pdf-tier-table td.si-col { background: rgba(241, 245, 249, 0.95); border-color: #cbd5e1; font-weight: 800; color: #1e293b; font-size: 9px; }
+        .tier-prem { font-size: 11px; font-weight: 900; color: #764ba2; }
+        .tier-save { color: #16a34a; font-size: 8px; font-weight: 800; margin-top: 2px; }
+        .si-sub { font-size: 7px; color: #64748b; font-weight: 600; display: block; text-transform: uppercase; margin-top: 1px;}
+        .pdf-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 12px; margin-bottom: 15px; }
+        .pdf-feat-box { display: flex; align-items: center; padding: 2px 0; border-bottom: 1px dotted rgba(203, 213, 225, 0.8); }
+        .pdf-icon-wrap { color: #764ba2; font-size: 11px; width: 18px; text-align: left; flex-shrink: 0; margin-right: 4px; }
+        .pdf-feat-text { display: flex; flex-direction: column; flex: 1; }
+        .pdf-feat-l { font-size: 7px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 1px; }
+        .pdf-feat-v { font-size: 8px; font-weight: 800; color: #0f172a; }
+        .pdf-cols-wrapper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 5px; }
+        .pdf-col { border: 1px solid rgba(226, 232, 240, 0.9); border-radius: 6px; padding: 8px; background: rgba(255, 255, 255, 0.8); }
+        .pdf-col-h { font-size: 8px; font-weight: 800; color: #764ba2; text-transform: uppercase; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 3px; margin-bottom: 4px; }
+        .pdf-row-item { display: flex; align-items: center; justify-content: space-between; font-size: 7.5px; padding: 3px 0; border-bottom: 1px dashed rgba(241, 245, 249, 0.8); }
+        .pdf-row-item:last-child { border-bottom: none; }
+        .pdf-row-left { display: flex; align-items: center; max-width: 55%; } 
+        .pdf-row-icon { color: #764ba2; font-size: 9px; width: 14px; text-align: left; flex-shrink: 0; margin-right: 4px; }
+        .pdf-row-k { color: #555; font-weight: 600; line-height: 1.1; }
+        .pdf-row-v { color: #000; font-weight: 800; max-width: 45%; text-align: right; line-height: 1.1; }
+        .pdf-sales-signature { margin-top: auto; padding: 12px; background: rgba(118, 75, 162, 0.05); border: 1px dashed #764ba2; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .pdf-sales-signature .sales-title { font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
+        .pdf-sales-signature .sales-name { font-size: 14px; font-weight: 900; color: #764ba2; }
+        .pdf-sales-signature .sales-contact { font-size: 11px; font-weight: 800; color: #1e293b; text-align: right; }
+        .pdf-footer { margin-top: 5px; padding-top: 6px; border-top: 1px solid #cbd5e1; font-size: 7px; color: #475569; text-align: justify; line-height: 1.3; }
+
+        /* QUOTE RECALL UI SPINNER */
+        .spinner { display: none; width: 16px; height: 16px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-loading .spinner { display: inline-block; }
+        .btn-loading .btn-text { display: none; }
+        .btn-loading { cursor: not-allowed; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <!-- CUSTOM ALERT OVERLAY -->
+    <div id="customAlertOverlay" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <i class="fas fa-exclamation-circle custom-alert-icon"></i>
+            <div id="customAlertMsg" class="custom-alert-msg"></div>
+            <button class="custom-alert-btn" onclick="closeAlert()">OK</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="page-head">
+            <h1>Health Alpha <span>Select</span></h1>
+        </header>
+
+        <!-- REWORK QUOTE SECTION -->
+        <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #cbd5e1; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+            <label style="color: var(--accent-color); font-weight: 800;"><i class="fas fa-cloud-download-alt"></i> Rework on Existing Quote</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="searchQuoteId" placeholder="Enter Quote ID (e.g. HA123456)" style="flex: 1; margin-bottom: 0;">
+                <button type="button" id="fetchBtn" class="btn btn-primary" onclick="recallQuote()" style="padding: 0 20px; min-width: 130px; margin: 0;">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Fetch Data</span>
+                </button>
+            </div>
+            <div id="recallMsg" style="font-size: 12px; margin-top: 8px; color: #ef4444; font-weight: 600;"></div>
+        </div>
+
+        <section class="card" id="basic-section">
+            <div class="section-title"><span class="tag"><i class="fas fa-user-circle"></i> Basic Details</span><span class="divider"></span></div>
+            <div class="grid">
+                <div class="col-12"><label>Customer Name</label><input type="text" id="customerName" placeholder="Enter Customer Name"></div>
+                <div class="col-6"><label>Sum Insured</label><select id="sumInsured"><option>5 Lac</option><option>7.5 Lac</option><option selected>10 Lac</option><option>12.5 Lac</option><option>15 Lac</option><option>20 Lac</option><option>25 Lac</option><option>30 Lac</option><option>35 Lac</option><option>50 Lac</option><option>75 Lac</option><option>1Cr</option></select></div>
+                <div class="col-12"><label>Policy Type</label><input type="hidden" id="policyType" value="Individual"><div class="toggle-wrapper" id="policyTypeWrapper"><div class="toggle-slider"></div><div class="toggle-option active" data-val="Individual">Individual</div><div class="toggle-option" data-val="Family Floater">Family Floater</div><div class="toggle-option" data-val="Individual Floater">Ind. Floater</div></div></div>
+                <div class="col-6"><label>Combination</label><div style="display:flex; gap:8px;"><select id="combination" style="flex:1;"><option>1A</option><option>2A</option><option>1A+1C</option><option>1A+2C</option><option>1A+3C</option><option>1A+4C</option><option>1A+5C</option><option>2A+1C</option><option>2A+2C</option><option>2A+3C</option><option>2A+4C</option><option>2A+5C</option></select><button class="btn btn-grey" id="genMembersBtn"><i class="fas fa-sync-alt"></i></button></div></div>
+                <div class="col-6"><label>Zone</label><input type="hidden" id="zone" value="Zone B"><div class="toggle-wrapper" id="zoneWrapper"><div class="toggle-slider"></div><div class="toggle-option" data-val="Zone A">Zone A</div><div class="toggle-option active" data-val="Zone B">Zone B</div></div></div>
+                <div class="col-6"><label>Tenure</label><select id="tenure"><option value="1">1 Year</option><option value="2">2 Year</option><option value="3">3 Year</option><option value="4">4 Year</option><option value="5">5 Year</option></select></div>
+            </div>
+        </section>
+
+        <section class="card" id="members-section"><div class="section-title"><span class="tag"><i class="fas fa-users"></i> Member Details</span><span class="divider"></span></div><div id="membersWrap" class="grid"></div><div id="membersError" class="error-text"></div></section>
+
+        <section class="card" id="modifiers-section">
+            <div class="section-title"><span class="tag"><i class="fas fa-sliders-h"></i> Modifiers</span><span class="divider"></span></div>
+            <div class="grid">
+                <div class="col-6"><label>Room Category</label><select id="roomCategory"><option>Single Pvt AC Room</option><option>Twin-Sharing</option><option>Actuals</option></select></div>
+                <div class="col-6"><label>PED Waiting Period</label><select id="pedWait"><option value="3 Year" selected>3 Years</option><option value="2 Year">2 Years</option><option value="1 Year">1 Year</option></select></div>
+                <div class="col-6"><label>Specific Waiting Period</label><select id="specWait"><option value="2 Year" selected>2 Years</option><option value="1 Year">1 Year</option></select></div>
+                <div class="col-6"><label>No Claim Bonus/Discount</label>
+                    <select id="ncb">
+                        <option value="100" selected>Upto 100%</option>
+                        <option value="200">Upto 200%</option>
+                        <option value="300">Upto 300%</option>
+                        <option value="400">Upto 400%</option>
+                        <option value="500">Upto 500%</option>
+                        <option value="600">Upto 600%</option>
+                        <option value="700">Upto 700%</option>
+                        <option value="800">Upto 800%</option>
+                        <option value="900">Upto 900%</option>
+                        <option value="1000">Upto 1000%</option>
+                        <option value="NCD">No Claim Discount</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" id="optional-section">
+            <div class="section-title"><span class="tag"><i class="fas fa-plus-circle"></i> Optional Benefits</span><span class="divider"></span></div>
+            <div class="grid">
+                <div class="col-6"><label>Consumables</label><select id="consumables"><option>Not Opted</option><option>Yes</option></select></div>
+                <div class="col-6"><label>Air Ambulance</label><select id="airAmbulance"><option selected>Not Opted</option><option>Yes</option></select></div>
+                <div class="col-6"><label>Health Check-Up</label><select id="healthCheck"><option>Not Opted</option><option>Rs.3,000</option><option>Rs.4,000</option><option>Rs.5,000</option></select></div>
+                <div class="col-6" id="endlessContainer"><label>Endless Sum Insured</label><select id="endless"><option>Not Opted</option><option>Yes</option></select></div>
+                <div class="col-6" id="reconstructiveContainer"><label>Reconstructive Surgery</label><select id="reconstructive"><option>Not Opted</option><option>Yes</option></select></div>
+                <div class="col-6" id="opdContainer"><label>OPD Coverage</label><select id="opd"><option>Not Opted</option></select></div>
+                <div class="col-6" id="hospitalCashContainer"><label>Hospital Daily Cash</label><select id="hospitalCash"><option>Not Opted</option><option>3 Days</option><option>5 Days</option><option>10 Days</option></select></div>
+                <div class="col-6" id="maternityContainer"><label>Maternity Benefit</label><select id="maternity"><option>Not Opted</option></select></div>
+                <div class="col-6 pop-in" id="maternityWaitContainer" style="display:none;"><label style="color:var(--accent-color);">Maternity Waiting Period</label><select id="maternityWait"><option>1 Year</option><option>2 Years</option><option>3 Years</option></select></div>
+            </div>
+        </section>
+
+        <section class="card" id="discounts-section">
+            <div class="section-title"><span class="tag"><i class="fas fa-percent"></i> Discounts</span><span class="divider"></span></div>
+            <div class="grid">
+                <div class="col-6"><label>Welcome Discount</label><select id="welcomeDisc"><option>No</option><option>Yes</option></select></div>
+                <div class="col-6"><label>Preferred Network</label><select id="preferredNetwork"><option>Non-Preferred Partner</option><option>Preferred Partner</option></select></div>
+                <div class="col-6"><label>Girl Child Discount (Auto)</label><input type="text" id="girlChildDisc" value="No" readonly style="color:var(--text-secondary); border-color:var(--border-color);"><input type="hidden" id="hasGirlChild" value="false"></div>
+                <div class="col-6" style="display:none"><label>SBI Group Employee</label><select id="employeeDiscount"><option>No</option><option>Yes</option></select></div>
+                <div class="col-6"><label>Cross-Sell Discount</label><select id="crossSellDiscount"><option>No</option><option>Yes</option></select></div>
+            </div>
+        </section>
+
+        <div class="actions primary-actions">
+            <button id="calcBtn" class="btn btn-primary"><i class="fas fa-calculator"></i> Calculate Premium</button>
+            <button id="resetBtn" class="btn btn-grey"><i class="fas fa-redo"></i> Reset</button>
+        </div>
+
+        <div id="results-container">
+            <!-- QUOTE ID DISPLAY -->
+            <div id="quoteIdContainer" style="text-align: center; margin-bottom: 20px; display: none;">
+                <span style="background: rgba(118, 75, 162, 0.1); color: var(--accent-color); padding: 8px 20px; border-radius: 99px; font-weight: 800; border: 1px solid var(--accent-color); font-size: 14px;">
+                    Quote ID: <span id="displayQuoteId"></span>
+                </span>
+            </div>
+
+            <div class="results-header">Detailed Premium Breakdown</div>
+            
+            <div class="premium-breakdown-grid" id="premiumGridTarget"></div>
+
+            <div class="result-actions-bar" style="margin-top: 0;">
+                <button id="pdfBtn" class="btn btn-green"><i class="fas fa-file-pdf"></i> Download Quote (PDF)</button>
+                <button id="waBtn" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+            </div>
+            <div style="text-align:center; margin-top:15px; margin-bottom: 30px; font-size:11px; color:#94a3b8; font-style:italic;">Multi-year premiums account for age progression.</div>
+
+            <!-- INBUILT FEATURES -->
+            <div class="features-container" id="inbuilt-section">
+                <div class="section-title"><span class="tag"><i class="fas fa-check-circle"></i> Inbuilt Policy Benefits</span><span class="divider"></span></div>
+                <div class="feat-grid">
+                    <div class="feat-item"><i class="fas fa-procedures feat-icon"></i><div class="feat-label">In-Patient</div><div class="feat-val">Up to Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-sun feat-icon"></i><div class="feat-label">Day Care</div><div class="feat-val">Within Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-leaf feat-icon"></i><div class="feat-label">AYUSH Treatment</div><div class="feat-val">Within Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-home feat-icon"></i><div class="feat-label">Domiciliary</div><div class="feat-val">Within Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-hourglass-start feat-icon"></i><div class="feat-label">Pre-Hospitalization</div><div class="feat-val">60 Days</div></div>
+                    <div class="feat-item"><i class="fas fa-hourglass-end feat-icon"></i><div class="feat-label">Post-Hospitalization</div><div class="feat-val">90 Days</div></div>
+                    <div class="feat-item"><i class="fas fa-weight feat-icon"></i><div class="feat-label">Bariatric Surgery</div><div class="feat-val">Within Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-ambulance feat-icon"></i><div class="feat-label">Road Ambulance</div><div class="feat-val">Up to ₹3,500</div></div>
+                    <div class="feat-item"><i class="fas fa-taxi feat-icon"></i><div class="feat-label">Radio Cab</div><div class="feat-val">Up to ₹1,000</div></div>
+                    <div class="feat-item"><i class="fas fa-hand-holding-heart feat-icon"></i><div class="feat-label">Organ Donor</div><div class="feat-val">Up to Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-robot feat-icon"></i><div class="feat-label">Modern Treatment</div><div class="feat-val">Up to Sum Insured</div></div>
+                    <div class="feat-item"><i class="fas fa-sync feat-icon"></i><div class="feat-label">Restore Benefit</div><div class="feat-val">Unlimited / 100%</div></div>
+                    <div class="feat-item"><i class="fas fa-user-injured feat-icon"></i><div class="feat-label">Convalescence</div><div class="feat-val">₹5,000 (Min 7 Days)</div></div>
+                    <div class="feat-item"><i class="fas fa-stethoscope feat-icon"></i><div class="feat-label">Second Opinion</div><div class="feat-val">Covered</div></div>
+                </div>
+            </div>
+
+            <div class="features-container" id="modifiers-display-section"><div class="section-title"><span class="tag"><i class="fas fa-sliders-h"></i> Selected Modifiers</span><span class="divider"></span></div><div class="feat-grid" id="modifiers-grid-target"></div></div>
+            <div class="features-container" id="optionals-display-section" style="display:none;"><div class="section-title"><span class="tag"><i class="fas fa-plus-circle"></i> Selected Optional Benefits</span><span class="divider"></span></div><div class="feat-grid" id="optionals-grid-target"></div></div>
+        </div>
+    </div>
+
+    <div id="pdf-overlay-root"></div>
+
+    <script>
+        // ========================================================================
+        // BACKEND / SYNC SETUP
+        // ========================================================================
+        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyCt_R9SdB-L4mBAIr7JJymSSzvzZWX4zyU-xIdVH_HYL1Y4iYVBuU05Tfngp5zfHP14g/exec'; 
+
+        let activeQuoteId = null;
+        let lastCalcSignature = null;
+        let lastSavedPayloadStr = null; 
+
+        function generateQuoteId() { return 'HA' + Math.floor(100000 + Math.random() * 900000); }
+
+        function showAlert(msg) { document.getElementById('customAlertMsg').innerText = msg; document.getElementById('customAlertOverlay').style.display = 'flex'; }
+        function closeAlert() { document.getElementById('customAlertOverlay').style.display = 'none'; }
+        
+        // Programmatically set toggle values (Used for Recall feature)
+        function setToggleValue(hiddenInputId, val) {
+            const hiddenInput = document.getElementById(hiddenInputId);
+            hiddenInput.value = val;
+            const wrapper = hiddenInput.nextElementSibling;
+            if(!wrapper) return;
+            const options = wrapper.querySelectorAll('.toggle-option');
+            options.forEach(o => o.classList.remove('active'));
+            const targetOpt = wrapper.querySelector(`.toggle-option[data-val="${val}"]`);
+            if (targetOpt) {
+                targetOpt.classList.add('active');
+                const slider = wrapper.querySelector('.toggle-slider');
+                slider.style.transform = `translateX(${targetOpt.offsetLeft}px)`; 
+                slider.style.width = `${targetOpt.offsetWidth}px`;
+            }
+            hiddenInput.dispatchEvent(new Event('change'));
+        }
+
+        // --- BACKEND SAVING LOGIC (Receives dynamic location arguments) ---
+        async function saveQuoteToBackend(quoteId, finalPremiums, locCountry, locState, locDistrict, locCity) {
+            let membersArr = [];
+            document.querySelectorAll('.member-card').forEach(card => {
+                membersArr.push({
+                    role: card.querySelector('.age-input').getAttribute('data-role'),
+                    age: parseInt(card.querySelector('.age-input').value) || 0,
+                    gender: card.querySelector('.gender-input').value
+                });
+            });
+
+            const storedName = localStorage.getItem("salesBuddyUserName") || "Authorized Partner";
+
+            const payload = {
+                action: "save",
+                userName: storedName,
+                country: locCountry,
+                state: locState,
+                district: locDistrict,
+                city: locCity,
+                productName: "Health Alpha - Select",
+                planType: document.getElementById('policyType').value,
+                sumInsured: document.getElementById('sumInsured').value,
+                premiumQuoted: finalPremiums[0]?.prem || 0,
+                quoteId: quoteId,
+                customerName: document.getElementById('customerName').value,
+                combination: document.getElementById('combination').value,
+                zone: document.getElementById('zone').value,
+                tenure: document.getElementById('tenure').value,
+                roomCategory: document.getElementById('roomCategory').value,
+                pedWait: document.getElementById('pedWait').value,
+                specWait: document.getElementById('specWait').value,
+                ncb: document.getElementById('ncb').value,
+                consumables: document.getElementById('consumables').value,
+                airAmbulance: document.getElementById('airAmbulance').value,
+                healthCheck: document.getElementById('healthCheck').value,
+                endless: document.getElementById('endless').value,
+                reconstructive: document.getElementById('reconstructive').value,
+                opd: document.getElementById('opd').value,
+                hospitalCash: document.getElementById('hospitalCash').value,
+                maternity: document.getElementById('maternity').value,
+                maternityWait: document.getElementById('maternityWait').value,
+                welcomeDisc: document.getElementById('welcomeDisc').value,
+                preferredNetwork: document.getElementById('preferredNetwork').value,
+                crossSellDiscount: document.getElementById('crossSellDiscount').value,
+                employeeDiscount: document.getElementById('employeeDiscount').value,
+                members: JSON.stringify(membersArr), 
+                premium1Yr: finalPremiums[0]?.prem || 0,
+                premium2Yr: finalPremiums[1]?.prem || 0,
+                premium3Yr: finalPremiums[2]?.prem || 0,
+                premium4Yr: finalPremiums[3]?.prem || 0,
+                premium5Yr: finalPremiums[4]?.prem || 0
+            };
+
+            const currentPayloadStr = JSON.stringify(payload);
+
+            if (currentPayloadStr === lastSavedPayloadStr) {
+                return; 
+            }
+
+            try {
+                await fetch(GOOGLE_APP_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: currentPayloadStr
+                });
+                lastSavedPayloadStr = currentPayloadStr; 
+            } catch (e) { console.error("Failed to save quote to Sheets", e); }
+        }
+
+        // --- BACKEND RECALL LOGIC ---
+        async function recallQuote() {
+            const quoteId = document.getElementById('searchQuoteId').value.trim();
+            const msgBox = document.getElementById('recallMsg');
+            const fetchBtn = document.getElementById('fetchBtn');
+
+            if (!quoteId) { msgBox.innerText = "Please enter a Quote ID."; return; }
+
+            msgBox.style.color = '#764ba2'; msgBox.innerText = "Fetching data...";
+            fetchBtn.classList.add('btn-loading'); fetchBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${GOOGLE_APP_SCRIPT_URL}?quoteId=${quoteId}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    msgBox.style.color = '#ef4444'; msgBox.innerText = "Quote ID not found.";
+                } else {
+                    msgBox.style.color = '#10b981'; msgBox.innerText = "Data loaded successfully!";
+                    
+                    activeQuoteId = null; lastCalcSignature = null; // Force new calculation save
+                    document.getElementById('results-container').style.display = 'none';
+
+                    // Form hydration
+                    document.getElementById('customerName').value = data.CustomerName || '';
+                    document.getElementById('sumInsured').value = data.SumInsured;
+                    setToggleValue('policyType', data.PolicyType);
+                    document.getElementById('combination').value = data.Combination;
+                    setToggleValue('zone', data.Zone);
+                    document.getElementById('tenure').value = data.Tenure;
+                    
+                    document.getElementById('roomCategory').value = data.RoomCategory;
+                    document.getElementById('pedWait').value = data.PedWait;
+                    document.getElementById('specWait').value = data.SpecWait;
+                    document.getElementById('ncb').value = data.Ncb;
+                    document.getElementById('consumables').value = data.Consumables;
+                    document.getElementById('airAmbulance').value = data.AirAmbulance;
+                    document.getElementById('healthCheck').value = data.HealthCheck;
+                    document.getElementById('endless').value = data.Endless;
+                    document.getElementById('reconstructive').value = data.Reconstructive;
+                    
+                    // Render UI elements based on core details BEFORE setting optionals that depend on UI limits
+                    enforcePolicyCombination();
+                    renderMemberRows();
+                    updateOptionalVisibility();
+
+                    document.getElementById('opd').value = data.Opd;
+                    document.getElementById('hospitalCash').value = data.HospitalCash;
+                    document.getElementById('maternity').value = data.Maternity;
+                    document.getElementById('maternityWait').value = data.MaternityWait;
+                    document.getElementById('welcomeDisc').value = data.WelcomeDisc;
+                    document.getElementById('preferredNetwork').value = data.PreferredNetwork;
+                    document.getElementById('crossSellDiscount').value = data.CrossSellDiscount;
+                    document.getElementById('employeeDiscount').value = data.EmployeeDiscount;
+
+                    // Hydrate Members dynamically
+                    if (data.Members) {
+                        let membersData = JSON.parse(data.Members);
+                        let cards = document.querySelectorAll('.member-card');
+                        membersData.forEach((mem, idx) => {
+                             if(cards[idx]) {
+                                 const ageInput = cards[idx].querySelector('.age-input');
+                                 const genInput = cards[idx].querySelector('.gender-input');
+                                 ageInput.value = mem.age || '';
+                                 genInput.value = mem.gender;
+                                 ageInput.dispatchEvent(new Event('input')); // trigger validation
+                             }
+                        });
+                    }
+                    
+                    updateOptionalVisibility(); checkGirlChildDiscount();
+                }
+            } catch (error) {
+                msgBox.style.color = '#ef4444'; msgBox.innerText = "Network error while fetching quote.";
+            } finally {
+                fetchBtn.classList.remove('btn-loading'); fetchBtn.disabled = false;
+            }
+        }
+
+        // --- RATE TABLES ---
+        const ROAD_AMB_BASE_RATES = { "0-17": 21.00, "18-25": 14.00, "26-30": 18.00, "31-35": 22.00, "36-40": 27.00, "41-45": 34.00, "46-50": 43.00, "51-55": 53.00, "56-60": 66.00, "61-65": 83.00, "66-70": 103.00, "71-75": 129.00, "76-80": 161.00, "81-85": 200.00, "85+": 250.00 };
+        const ROAD_AMB_RELATIVITY = 0.65;
+        const RADIO_CAB_BASE_RATES = { "0-17": 24.00, "18-25": 16.00, "26-30": 20.00, "31-35": 25.00, "36-40": 31.00, "41-45": 39.00, "46-50": 49.00, "51-55": 61.00, "56-60": 76.00, "61-65": 95.00, "66-70": 118.00, "71-75": 147.00, "76-80": 183.00, "81-85": 229.00, "85+": 285.00 };
+        const RADIO_CAB_RELATIVITY = 2.00;
+        const AIR_AMB_BASE_RATES = { "0-17": 121, "18-25": 81, "26-30": 101, "31-35": 126, "36-40": 157, "41-45": 196, "46-50": 244, "51-55": 304, "56-60": 380, "61-65": 473, "66-70": 590, "71-75": 736, "76-80": 918, "81-85": 1144, "85+": 1427 };
+        const AIR_AMB_RELATIVITY = 2.00;
+        const HEALTH_CHECK_RATES = { "Rs.3,000": 1468, "Rs.4,000": 1957, "Rs.5,000": 2447 };
+        const TENURE_DISCOUNTS = { 1: 0, 2: 0.06, 3: 0.09, 4: 0.11, 5: 0.14 };
+        const HDC_BASE_RATES = { "0-17": 301.00, "18-25": 204.00, "26-30": 257.00, "31-35": 324.00, "36-40": 413.00, "41-45": 517.00, "46-50": 647.00, "51-55": 825.00, "56-60": 1055.00, "61-65": 1347.00, "66-70": 1719.00, "71-75": 2190.00, "76-80": 2857.00, "81-85": 4164.00, "85+": 5950.00 };
+        const HDC_DAYS_RELATIVITY = { "3 Days": 0.80, "5 Days": 0.85, "10 Days": 0.90 };
+        const HDC_DEDUCTIBLE_RELATIVITY = 0.597004515537621;
+        
+        const SI_LABELS_ORDER = ["5 Lac", "7.5 Lac", "10 Lac", "12.5 Lac", "15 Lac", "20 Lac", "25 Lac", "30 Lac", "35 Lac", "50 Lac", "75 Lac", "1Cr"];
+        const SI_LABEL_TO_VALUE = { "5 Lac": 500000, "7.5 Lac": 750000, "10 Lac": 1000000, "12.5 Lac": 1250000, "15 Lac": 1500000, "20 Lac": 2000000, "25 Lac": 2500000, "30 Lac": 3000000, "35 Lac": 3500000, "50 Lac": 5000000, "75 Lac": 7500000, "1Cr": 10000000 };
+        
+        const BASE_RATES = {
+            "0-17":  { 500000: 5752, 750000: 6608, 1000000: 6893, 1250000: 7635, 1500000: 8634, 2000000: 9776, 2500000: 10346, 3000000: 10774, 3500000: 11202, 5000000: 12487, 7500000: 13477, 10000000: 14333 },
+            "18-25": { 500000: 5480, 750000: 6295, 1000000: 6567, 1250000: 7274, 1500000: 8225, 2000000: 9312, 2500000: 9856, 3000000: 10405, 3500000: 10813, 5000000: 12036, 7500000: 13038, 10000000: 13853 },
+            "26-30": { 500000: 6023, 750000: 6920, 1000000: 7219, 1250000: 7997, 1500000: 9043, 2000000: 10239, 2500000: 10837, 3000000: 11427, 3500000: 11875, 5000000: 13221, 7500000: 14315, 10000000: 15212 },
+            "31-35": { 500000: 6567, 750000: 7545, 1000000: 7872, 1250000: 8720, 1500000: 9861, 2000000: 11166, 2500000: 11818, 3000000: 12449, 3500000: 12938, 5000000: 14406, 7500000: 15593, 10000000: 16571 },
+            "36-40": { 500000: 8198, 750000: 9421, 1000000: 9829, 1250000: 10888, 1500000: 12315, 2000000: 13946, 2500000: 14761, 3000000: 15515, 3500000: 16126, 5000000: 17961, 7500000: 19425, 10000000: 20648 },
+            "41-45": { 500000: 10372, 750000: 11921, 1000000: 12438, 1250000: 13780, 1500000: 15588, 2000000: 17653, 2500000: 18686, 3000000: 19602, 3500000: 20377, 5000000: 22701, 7500000: 24534, 10000000: 26084 },
+            "46-50": { 500000: 13090, 750000: 15047, 1000000: 15699, 1250000: 17434, 1500000: 19718, 2000000: 22327, 2500000: 23631, 3000000: 24738, 3500000: 25716, 5000000: 28652, 7500000: 31121, 10000000: 33078 },
+            "51-55": { 500000: 17982, 750000: 20673, 1000000: 21570, 1250000: 23941, 1500000: 27080, 2000000: 30668, 2500000: 32462, 3000000: 33935, 3500000: 35280, 5000000: 39317, 7500000: 42618, 10000000: 45309 },
+            "56-60": { 500000: 22744, 750000: 26128, 1000000: 27256, 1250000: 30189, 1500000: 34136, 2000000: 38648, 2500000: 40904, 3000000: 42622, 3500000: 44313, 5000000: 49389, 7500000: 53476, 10000000: 56860 },
+            "61-65": { 500000: 32921, 750000: 37831, 1000000: 39468, 1250000: 43749, 1500000: 49478, 2000000: 56025, 2500000: 59299, 3000000: 61754, 3500000: 64209, 5000000: 71574, 7500000: 77391, 10000000: 82302 },
+            "66-70": { 500000: 46420, 750000: 53356, 1000000: 55667, 1250000: 61704, 1500000: 69795, 2000000: 79042, 2500000: 83665, 3000000: 87133, 3500000: 90600, 5000000: 101003, 7500000: 109115, 10000000: 116050 },
+            "71-75": { 500000: 62603, 750000: 71965, 1000000: 75086, 1250000: 83226, 1500000: 94149, 2000000: 106632, 2500000: 112874, 3000000: 117555, 3500000: 122237, 5000000: 136280, 7500000: 147143, 10000000: 156506 },
+            "76-80": { 500000: 84449, 750000: 97088, 1000000: 101301, 1250000: 112281, 1500000: 127027, 2000000: 143880, 2500000: 152306, 3000000: 158626, 3500000: 164945, 5000000: 183905, 7500000: 198481, 10000000: 211121 },
+            "81-85": { 500000: 113941, 750000: 131004, 1000000: 136692, 1250000: 151506, 1500000: 171413, 2000000: 194164, 2500000: 205539, 3000000: 214071, 3500000: 222602, 5000000: 248197, 7500000: 267787, 10000000: 284851 },
+            "85+":   { 500000: 153755, 750000: 176790, 1000000: 184469, 1250000: 204458, 1500000: 231333, 2000000: 262047, 2500000: 277404, 3000000: 288921, 3500000: 300439, 5000000: 334992, 7500000: 361351, 10000000: 384386 }
+        };
+        const NEW_BORN_RATES = { 500000: 6165, 750000: 7082, 1000000: 7388, 1250000: 8183, 1500000: 9253, 2000000: 10476, 2500000: 11088, 3000000: 11706, 3500000: 12164, 5000000: 13540, 7500000: 14668, 10000000: 15585, 100000000: 23148 };
+        const CONVALESCENCE_RATES = { "0-17": 6.30, "18-25": 4.23, "26-30": 5.27, "31-35": 6.57, "36-40": 11.98, "41-45": 14.94, "46-50": 18.63, "51-55": 23.23, "56-60": 28.97, "61-65": 36.13, "66-70": 45.05, "71-75": 56.17, "76-80": 70.04, "81-85": 87.34, "85+": 108.91 };
+        const OPD_BASE_RATE = 9175;
+        const OPD_LIMIT_FACTORS = { "Rs. 5,000": 0.30, "Rs. 10,000": 0.60, "Rs. 25,000": 1.00 };
+        const CHILD_VACCINATION_RATE = 2202;
+        const E_OPINION_RATE = 147;
+        const MATERNITY_RATES = { "18-35": { 50000: 12053, 75000: 18079 }, "36-45": { 50000: 10245, 75000: 15368 }, "45+": { 50000: 6026, 75000: 9040 } };
+
+        const membersWrap = document.getElementById('membersWrap');
+        const membersError = document.getElementById('membersError');
+
+        function parseCombination(combo) { const parts = combo.split('+'); let adults = 0, children = 0; parts.forEach(p => { const n = parseInt(p); if (p.includes('A')) adults += n || 0; if (p.includes('C')) children += n || 0; }); return { adults, children }; }
+
+        function calculateAgeFromDOB(dobStr) {
+            const parts = dobStr.split('-'); if(parts.length !== 3) return null;
+            const dob = new Date(parts[2], parts[1] - 1, parts[0]); const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear(); const mDiff = today.getMonth() - dob.getMonth();
+            if (mDiff < 0 || (mDiff === 0 && today.getDate() < dob.getDate())) { age--; }
+            return age < 0 ? 0 : age;
+        }
+
+        function bindMemberInputs() {
+            membersWrap.querySelectorAll('.member-card').forEach(card => {
+                const ageEl = card.querySelector('.age-input'); const dobEl = card.querySelector('.dob-input');
+                ageEl.addEventListener('input', (e) => {
+                    if (!ageEl.hasAttribute('readonly')) { if (e.target.value !== '') dobEl.setAttribute('readonly', true); else dobEl.removeAttribute('readonly'); }
+                    const role = e.target.getAttribute('data-role'); const val = parseInt(e.target.value); const errorSpan = e.target.nextElementSibling;
+                    if (isNaN(val)) { e.target.classList.remove('input-error'); if (errorSpan) errorSpan.style.display = 'none'; return; }
+                    if (role === 'adult' && val < 18) { e.target.classList.add('input-error'); if (errorSpan) { errorSpan.innerText = "Adult min age is 18"; errorSpan.style.display = 'block'; } } 
+                    else if (role === 'child' && val > 25) { e.target.classList.add('input-error'); if (errorSpan) { errorSpan.innerText = "Child max age is 25"; errorSpan.style.display = 'block'; } } 
+                    else { e.target.classList.remove('input-error'); if (errorSpan) errorSpan.style.display = 'none'; }
+                });
+                dobEl.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/\D/g, ''); 
+                    if (val.length > 2) val = val.substring(0, 2) + '-' + val.substring(2); if (val.length > 5) val = val.substring(0, 5) + '-' + val.substring(5, 9);
+                    e.target.value = val;
+                    if (val.length > 0) { ageEl.setAttribute('readonly', true); if (val.length === 10) { const age = calculateAgeFromDOB(val); if(age !== null && !isNaN(age)) { ageEl.value = age; ageEl.dispatchEvent(new Event('input')); } } else { ageEl.value = ''; } } 
+                    else { ageEl.removeAttribute('readonly'); ageEl.value = ''; }
+                });
+            });
+        }
+
+        function renderMemberRows() {
+            const combo = document.getElementById('combination').value;
+            const { adults, children } = parseCombination(combo);
+            membersWrap.innerHTML = ''; membersError.style.display = 'none';
+            for (let i = 1; i <= adults; i++) {
+                membersWrap.innerHTML += `<div class="member-card col-12"><div class="band-wrap"><span class="band-pill">Adult ${i}</span></div><div class="grid"><div class="col-8" style="display: flex; gap: 12px;"><div style="flex: 1;"><label>DOB</label><input type="text" class="dob-input" data-role="adult" data-index="${i}" placeholder="DD-MM-YYYY" maxlength="10"/></div><div style="display: flex; align-items: center; padding-top: 24px; font-weight: 800; font-size: 11px; color: #94a3b8;">OR</div><div style="flex: 1; position: relative;"><label>Age</label><input type="number" min="18" max="120" data-role="adult" data-index="${i}" class="age-input" placeholder="Min 18 yrs"/><div class="validation-msg">Adult minimum age is 18</div></div></div><div class="col-4"><label>Gender</label><select class="gender-input" data-role="adult" data-index="${i}"><option>Male</option><option>Female</option></select></div></div></div>`;
+            }
+            for (let i = 1; i <= children; i++) {
+                membersWrap.innerHTML += `<div class="member-card col-12"><div class="band-wrap"><span class="band-pill">Child ${i}</span></div><div class="grid"><div class="col-8" style="display: flex; gap: 12px;"><div style="flex: 1;"><label>DOB</label><input type="text" class="dob-input" data-role="child" data-index="${i}" placeholder="DD-MM-YYYY" maxlength="10"/></div><div style="display: flex; align-items: center; padding-top: 24px; font-weight: 800; font-size: 11px; color: #94a3b8;">OR</div><div style="flex: 1; position: relative;"><label>Age</label><input type="number" min="0" max="25" data-role="child" data-index="${i}" class="age-input" placeholder="0 - 25 yrs"/><div class="validation-msg">Child maximum age is 25</div></div></div><div class="col-4"><label>Gender</label><select class="gender-input" data-role="child" data-index="${i}"><option>Male</option><option>Female</option></select></div></div></div>`;
+            }
+            membersWrap.querySelectorAll('input, select').forEach(el => { el.addEventListener('change', () => { updateOptionalVisibility(); checkGirlChildDiscount(); }); });
+            bindMemberInputs(); updateOptionalVisibility(); checkGirlChildDiscount();
+        }
+
+        function enforcePolicyCombination() {
+            const pt = document.getElementById('policyType').value; const comboSel = document.getElementById('combination'); const genBtn = document.getElementById('genMembersBtn');
+            if (pt === 'Individual') { comboSel.value = '1A'; [...comboSel.options].forEach(opt => { opt.hidden = (opt.value !== '1A'); opt.disabled = (opt.value !== '1A'); }); comboSel.disabled = true; } 
+            else { [...comboSel.options].forEach(opt => { if (opt.value === '1A') { opt.hidden = true; opt.disabled = true; } else { opt.hidden = false; opt.disabled = false; } }); comboSel.disabled = false; if (comboSel.value === '1A') { comboSel.value = '2A'; } }
+            genBtn.disabled = false;
+        }
+
+        function checkGirlChildDiscount() {
+            let hasGirlChild = false;
+            membersWrap.querySelectorAll('.member-card').forEach(card => {
+                const role = card.querySelector('.age-input').getAttribute('data-role'); const gender = card.querySelector('.gender-input').value;
+                if (role === 'child' && gender === 'Female') hasGirlChild = true;
+            });
+            const field = document.getElementById('girlChildDisc');
+            if (hasGirlChild) { field.value = "Opted"; field.style.color = "var(--success-color)"; field.style.fontWeight = "700"; field.style.borderColor = "var(--success-color)"; field.style.background = "#dcfce7"; document.getElementById('hasGirlChild').value = "true"; } 
+            else { field.value = "No"; field.style.color = "var(--text-secondary)"; field.style.fontWeight = "normal"; field.style.borderColor = "var(--border-color)"; field.style.background = "#f1f5f9"; document.getElementById('hasGirlChild').value = "false"; }
+        }
+
+        function updateOptionalVisibility() {
+            const siLabel = document.getElementById('sumInsured').value; const siVal = SI_LABEL_TO_VALUE[siLabel] || 0;
+            const opdSelect = document.getElementById('opd'); const opdContainer = document.getElementById('opdContainer');
+            if (siVal < 1000000) { opdContainer.style.display = 'none'; opdSelect.value = "Not Opted"; } else { opdContainer.style.display = 'block'; const options = siVal <= 2500000 ? ["Not Opted", "Rs. 5,000"] : ["Not Opted", "Rs. 10,000", "Rs. 25,000"]; opdSelect.innerHTML = options.map(o => `<option ${o===opdSelect.value ? 'selected':''}>${o}</option>`).join(''); }
+
+            const hospCashContainer = document.getElementById('hospitalCashContainer'); const hospCashSelect = document.getElementById('hospitalCash');
+            if (siVal < 1000000) { hospCashContainer.style.display = 'none'; hospCashSelect.value = "Not Opted"; } else { hospCashContainer.style.display = 'block'; }
+
+            const matContainer = document.getElementById('maternityContainer'); const matSelect = document.getElementById('maternity'); const matWaitContainer = document.getElementById('maternityWaitContainer');
+            let hasEligibleFemale = false;
+            membersWrap.querySelectorAll('.member-card').forEach(card => {
+                const gender = card.querySelector('.gender-input').value; const age = parseInt(card.querySelector('.age-input').value) || 0;
+                if (gender === 'Female' && age >= 18 && age <= 45) { hasEligibleFemale = true; }
+            });
+            if (siVal < 1000000 || !hasEligibleFemale) { matContainer.style.display = 'none'; matSelect.value = "Not Opted"; matWaitContainer.style.display = 'none'; } 
+            else { matContainer.style.display = 'block'; let applicableOption = ""; if (siVal === 1000000) applicableOption = "Rs. 50,000"; else if (siVal > 1000000) applicableOption = "Rs. 75,000"; const matOpts = ["Not Opted", applicableOption]; const currentVal = matSelect.value; matSelect.innerHTML = matOpts.map(o => `<option ${o===currentVal ? 'selected':''}>${o}</option>`).join(''); if (matSelect.value !== "Not Opted") matWaitContainer.style.display = 'block'; else matWaitContainer.style.display = 'none'; }
+            
+            const endlessContainer = document.getElementById('endlessContainer'); const endlessSelect = document.getElementById('endless');
+            if (siVal < 1000000) { endlessContainer.style.display = 'none'; endlessSelect.value = "Not Opted"; } else { endlessContainer.style.display = 'block'; }
+        }
+
+        function initToggles() {
+            document.querySelectorAll('.toggle-wrapper').forEach(wrapper => {
+                const hiddenInput = wrapper.previousElementSibling; const options = wrapper.querySelectorAll('.toggle-option'); const slider = wrapper.querySelector('.toggle-slider');
+                const moveSlider = (targetOption) => { slider.style.transform = `translateX(${targetOption.offsetLeft}px)`; slider.style.width = `${targetOption.offsetWidth}px`; };
+                setTimeout(() => { const active = wrapper.querySelector('.toggle-option.active'); if (active) moveSlider(active); }, 100);
+                options.forEach(opt => { opt.addEventListener('click', () => { options.forEach(o => o.classList.remove('active')); opt.classList.add('active'); moveSlider(opt); hiddenInput.value = opt.getAttribute('data-val'); hiddenInput.dispatchEvent(new Event('change')); }); });
+                window.addEventListener('resize', () => { const active = wrapper.querySelector('.toggle-option.active'); if (active) moveSlider(active); });
+            });
+        }
+
+        function getAgeBand(age) { if (age <= 17) return "0-17"; if (age >= 18 && age <= 25) return "18-25"; if (age >= 26 && age <= 30) return "26-30"; if (age >= 31 && age <= 35) return "31-35"; if (age >= 36 && age <= 40) return "36-40"; if (age >= 41 && age <= 45) return "41-45"; if (age >= 46 && age <= 50) return "46-50"; if (age >= 51 && age <= 55) return "51-55"; if (age >= 56 && age <= 60) return "56-60"; if (age >= 61 && age <= 65) return "61-65"; if (age >= 66 && age <= 70) return "66-70"; if (age >= 71 && age <= 75) return "71-75"; if (age >= 76 && age <= 80) return "76-80"; if (age >= 81 && age <= 85) return "81-85"; if (age > 85) return "85+"; return "18-25"; }
+        function getMaternityAgeBand(age) { if (age >= 18 && age <= 35) return "18-35"; if (age >= 36 && age <= 45) return "36-45"; if (age > 45) return "45+"; return null; }
+        function getOrganDonorPremium(siVal) { if (siVal <= 1000000) return 15; if (siVal > 1000000 && siVal <= 10000000) return 22; if (siVal > 10000000) return 29; return 0; }
+        function getRestoreBenefitLoading(siVal) { if (siVal <= 1000000) return 0.10; if (siVal > 1000000 && siVal <= 10000000) return 0.05; if (siVal > 10000000) return 0.03; return 0; }
+        function getEndlessLoading(siVal) { if (siVal <= 1000000) return 0.15; if (siVal > 1000000 && siVal <= 10000000) return 0.10; if (siVal > 10000000) return 0.05; return 0; }
+        function getFloaterDiscount(memberCount) { if (memberCount === 2) return 0.25; if (memberCount === 3) return 0.30; if (memberCount > 3) return 0.35; return 0; }
+
+        function calculatePremiumFor(siLabel) {
+            const siVal = SI_LABEL_TO_VALUE[siLabel];
+            const policyType = document.getElementById('policyType').value;
+            let membersAges = []; let femaleEligibleAges = [];
+            
+            document.querySelectorAll('.member-card').forEach(card => {
+                const age = parseInt(card.querySelector('.age-input').value);
+                const gender = card.querySelector('.gender-input').value;
+                if(!isNaN(age)) {
+                    membersAges.push(age);
+                    if (gender === 'Female' && age >= 18 && age <= 45) femaleEligibleAges.push(age);
+                }
+            });
+
+            const welcomeDiscRate = document.getElementById('welcomeDisc').value === "Yes" ? 0.05 : 0;
+            const preferredDiscRate = document.getElementById('preferredNetwork').value === "Preferred Partner" ? 0.10 : 0.00;
+            const girlChildDiscRate = document.getElementById('hasGirlChild').value === "true" ? 0.05 : 0;
+            const zoneDiscRate = document.getElementById('zone').value === 'Zone B' ? 0.20 : 0;
+            
+            let cappedEmployeeRate = document.getElementById('employeeDiscount').value === "Yes" ? 0.05 : 0;
+            let cappedCrossSellRate = document.getElementById('crossSellDiscount').value === "Yes" ? 0.05 : 0;
+            if (cappedEmployeeRate + cappedCrossSellRate > 0.15) cappedCrossSellRate = Math.max(0, 0.15 - cappedEmployeeRate);
+            
+            let floaterDisc = (policyType === 'Family Floater') ? getFloaterDiscount(membersAges.length) : 0;
+            let roomRentDiscPercent = 0;
+            const roomCat = document.getElementById('roomCategory').value;
+            if (roomCat === "Single Pvt AC Room") roomRentDiscPercent = 0.075;
+            else if (roomCat === "Twin-Sharing") roomRentDiscPercent = 0.10; 
+            
+            const pedWaitVal = document.getElementById('pedWait').value;
+            let pedModifier = (pedWaitVal === "3 Year") ? 0.15 : (pedWaitVal === "1 Year" ? -0.30 : 0);
+            let specWaitLoading = document.getElementById('specWait').value === "1 Year" ? 0.10 : 0;
+
+            const ncbVal = document.getElementById('ncb').value;
+            let ncbLoadingPercent = 0; let ncbDiscountPercent = 0; 
+            if (ncbVal === "200") ncbLoadingPercent = 0.05; else if (ncbVal === "300") ncbLoadingPercent = 0.06; else if (ncbVal === "400") ncbLoadingPercent = 0.07; else if (ncbVal === "500") ncbLoadingPercent = 0.08; else if (ncbVal === "600") ncbLoadingPercent = 0.09; else if (ncbVal === "700") ncbLoadingPercent = 0.10; else if (ncbVal === "800") ncbLoadingPercent = 0.11; else if (ncbVal === "900") ncbLoadingPercent = 0.12; else if (ncbVal === "1000") ncbLoadingPercent = 0.13; else if (ncbVal === "NCD") ncbDiscountPercent = 0.025;
+            
+            const organDonorAmt = getOrganDonorPremium(siVal) * membersAges.length;
+            const restoreBenefitPercent = getRestoreBenefitLoading(siVal);
+            let y_consumables_rate = document.getElementById('consumables').value === 'Yes' ? 0.10 : 0;
+            let endlessLoadingPercent = document.getElementById('endless').value === 'Yes' ? (siVal >= 1000000 ? getEndlessLoading(siVal) : 0) : 0;
+            let reconstructiveAmount = document.getElementById('reconstructive').value === 'Yes' ? 550 * membersAges.length : 0;
+
+            let opdAmount = 0;
+            const opdOpt = document.getElementById('opd').value;
+            if(opdOpt !== 'Not Opted' && siVal >= 1000000) {
+                const limitFactor = OPD_LIMIT_FACTORS[opdOpt] || 0;
+                const baseOpd = OPD_BASE_RATE * limitFactor;
+                if(policyType === 'Individual') opdAmount = baseOpd * membersAges.length;
+                else if (policyType === 'Individual Floater') opdAmount = baseOpd * 1.0;
+                else {
+                    let floaterFactor = 1.0;
+                    if(membersAges.length === 2) floaterFactor = 1.20;
+                    else if(membersAges.length === 3) floaterFactor = 1.40;
+                    else if(membersAges.length > 3) floaterFactor = 1.50;
+                    opdAmount = baseOpd * floaterFactor;
+                }
+                opdAmount = opdAmount * 0.90; 
+            }
+
+            const airAmbOpt = document.getElementById('airAmbulance').value;
+            const healthCheckOpt = document.getElementById('healthCheck').value;
+            
+            let maternityBenefitAmt = 0;
+            const maternityOpt = document.getElementById('maternity').value;
+            if(siVal >= 1000000) {
+                if (maternityOpt === "Rs. 50,000") maternityBenefitAmt = 50000;
+                if (maternityOpt === "Rs. 75,000") maternityBenefitAmt = 75000;
+                if (siVal > 1000000 && maternityOpt === "Rs. 50,000") maternityBenefitAmt = 75000;
+            }
+            
+            let matWpMultiplier = 1.0;
+            const maternityWait = document.getElementById('maternityWait').value;
+            if (maternityWait === "1 Year") matWpMultiplier = 1.674666666667; 
+            if (maternityWait === "3 Years") matWpMultiplier = 0.80;
+
+            let accumulatedGross = 0;
+            let results = [];
+            let totalAccumulated = { room: 0, ped: 0, ncbDisc: 0, floater: 0 };
+
+            for (let yr = 1; yr <= 5; yr++) {
+                let y_base = 0; let y_conv = 0; let y_road = 0; let y_radio = 0; let y_air = 0; let y_hdc = 0; let y_mat = 0; let y_nb = 0; let y_vac = 0; let y_hc = 0;
+
+                membersAges.forEach(baseAge => {
+                    let currentAge = baseAge + (yr - 1);
+                    let band = getAgeBand(currentAge);
+                    
+                    y_base += (BASE_RATES[band] && BASE_RATES[band][siVal] ? BASE_RATES[band][siVal] : 0);
+                    y_conv += ((CONVALESCENCE_RATES[band] || 0) / 1000) * 5000;
+                    y_road += (ROAD_AMB_BASE_RATES[band] || 0) * ROAD_AMB_RELATIVITY;
+                    y_radio += (RADIO_CAB_BASE_RATES[band] || 0) * RADIO_CAB_RELATIVITY;
+                    if (airAmbOpt === 'Yes') y_air += (AIR_AMB_BASE_RATES[band] || 0) * AIR_AMB_RELATIVITY;
+                    
+                    const hospCashOpt = document.getElementById('hospitalCash').value;
+                    if (hospCashOpt !== 'Not Opted' && siVal >= 1000000) {
+                        y_hdc += (HDC_BASE_RATES[band] || 0) * (HDC_DAYS_RELATIVITY[hospCashOpt] || 0) * HDC_DEDUCTIBLE_RELATIVITY;
+                    }
+                });
+
+                if (maternityBenefitAmt > 0 && femaleEligibleAges.length > 0) {
+                    femaleEligibleAges.forEach(femAge => {
+                        let currentFemAge = femAge + (yr - 1);
+                        if (currentFemAge >= 18 && currentFemAge <= 45) {
+                            let matBand = getMaternityAgeBand(currentFemAge);
+                            if (matBand && MATERNITY_RATES[matBand] && MATERNITY_RATES[matBand][maternityBenefitAmt]) {
+                                y_mat += MATERNITY_RATES[matBand][maternityBenefitAmt] * matWpMultiplier;
+                            }
+                            y_nb += NEW_BORN_RATES[siVal] || 0;
+                            y_vac += CHILD_VACCINATION_RATE;
+                        }
+                    });
+                }
+
+                if(healthCheckOpt !== 'Not Opted') {
+                    let eligibleMembers = 0;
+                    membersAges.forEach(baseAge => { if((baseAge + yr - 1) >= 18) eligibleMembers++; });
+                    if(eligibleMembers > 0) {
+                        let relativity = 1.0;
+                        if(eligibleMembers === 2) relativity = 1.20; else if(eligibleMembers === 3) relativity = 1.50; else if(eligibleMembers > 3) relativity = 1.65;
+                        y_hc = HEALTH_CHECK_RATES[healthCheckOpt] * relativity;
+                    }
+                }
+
+                let y_room = y_base * roomRentDiscPercent;
+                let y_post = y_base * 0.03;
+                let y_ped = pedModifier > 0 ? -1 * (y_base * pedModifier) : y_base * Math.abs(pedModifier);
+                let y_spec = y_base * specWaitLoading;
+                let y_ncbLoad = y_base * ncbLoadingPercent;
+                let y_ncbDisc = -1 * (y_base * ncbDiscountPercent);
+
+                totalAccumulated.room += y_room;
+                if(y_ped < 0) totalAccumulated.ped += Math.abs(y_ped); 
+                totalAccumulated.ncbDisc += Math.abs(y_ncbDisc); 
+
+                let y_baseForLoad = y_base + (y_room * -1) + y_ped + y_spec + y_ncbLoad + y_ncbDisc + y_post;
+                let y_restore = y_baseForLoad * restoreBenefitPercent;
+                let y_consumables = y_baseForLoad * y_consumables_rate;
+                let y_endless = y_baseForLoad * endlessLoadingPercent;
+                let y_eop = membersAges.length * E_OPINION_RATE;
+
+                let y_groupA = y_baseForLoad + y_restore + y_consumables + y_endless + organDonorAmt + y_air + y_road + y_radio + reconstructiveAmount + y_eop;
+                let y_floaterRed = (policyType === 'Family Floater') ? y_groupA * floaterDisc : 0;
+                totalAccumulated.floater += y_floaterRed;
+                
+                let y_postFloaterA = y_groupA - y_floaterRed;
+                let y_groupB = opdAmount + y_hdc + y_hc + y_mat + y_vac + y_nb + y_conv;
+                let y_grossTotal = y_postFloaterA + y_groupB;
+
+                accumulatedGross += y_grossTotal;
+                let runningTotal = accumulatedGross;
+                
+                runningTotal -= runningTotal * (TENURE_DISCOUNTS[yr] || 0);
+                runningTotal -= runningTotal * zoneDiscRate;
+                runningTotal -= runningTotal * preferredDiscRate;
+                runningTotal -= runningTotal * girlChildDiscRate;
+                runningTotal -= runningTotal * welcomeDiscRate;
+                runningTotal -= runningTotal * cappedEmployeeRate;
+                runningTotal -= runningTotal * cappedCrossSellRate;
+
+                let finalCumulative = runningTotal;
+                let totalDiscountAmt = accumulatedGross - finalCumulative;
+                let maxAllowedDiscount = accumulatedGross * 0.45;
+                if(totalDiscountAmt > maxAllowedDiscount) finalCumulative += (totalDiscountAmt - maxAllowedDiscount);
+
+                if (policyType === 'Individual Floater' && membersAges.length >= 2) finalCumulative -= (finalCumulative * 0.05);
+
+                let originalListPrice = accumulatedGross + totalAccumulated.room + totalAccumulated.ped + totalAccumulated.ncbDisc + totalAccumulated.floater; 
+                let totalSavingsDisplay = originalListPrice - finalCumulative;
+                let savingsPercent = originalListPrice > 0 ? (totalSavingsDisplay / originalListPrice) * 100 : 0;
+
+                results.push({ prem: Math.round(finalCumulative), save: Math.round(savingsPercent), gross: y_grossTotal });
+            }
+            return results;
+        }
+
+        async function calculateAndDisplay() {
+            if (document.querySelector('.input-error')) { showAlert("Please correct the highlighted age errors before calculating."); return; }
+            let membersAges = []; let isValid = true;
+            document.querySelectorAll('.member-card').forEach(card => { const age = parseInt(card.querySelector('.age-input').value); if (isNaN(age)) isValid = false; membersAges.push(age); });
+            if(!isValid && membersAges.length > 0) { showAlert("Please enter ages for all the members"); return; } 
+            else if (membersAges.length === 0) { showAlert("Please add members first."); return; }
+
+            const calcBtn = document.getElementById('calcBtn');
+            const originalBtnHTML = calcBtn.innerHTML;
+            calcBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            calcBtn.disabled = true;
+
+            try {
+                const siLabel = document.getElementById('sumInsured').value;
+                const data = calculatePremiumFor(siLabel);
+                
+                // 1. Fetch IP Location ON-DEMAND dynamically (No limits, No CORS issues)
+                let locCountry = "N/A", locState = "N/A", locDistrict = "N/A", locCity = "N/A";
+                try {
+                    const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+                    if(response.ok) {
+                        const geoData = await response.json();
+                        locCountry = geoData.country || "India";
+                        locState = geoData.region || "Unknown";
+                        locDistrict = geoData.city || "Unknown";
+                        locCity = geoData.city || "Unknown";
+                    }
+                } catch(e) {
+                    console.log("Location fetch failed silently.");
+                }
+                
+                // --- SYNC & QUOTE ID GENERATION ---
+                let membersSignature = [];
+                document.querySelectorAll('.member-card').forEach(card => {
+                    membersSignature.push(card.querySelector('.age-input').value + card.querySelector('.gender-input').value);
+                });
+
+                const currentSignature = JSON.stringify({
+                    cust: document.getElementById('customerName').value,
+                    policy: document.getElementById('policyType').value,
+                    si: document.getElementById('sumInsured').value,
+                    combo: document.getElementById('combination').value,
+                    zone: document.getElementById('zone').value,
+                    ten: document.getElementById('tenure').value,
+                    room: document.getElementById('roomCategory').value,
+                    ped: document.getElementById('pedWait').value,
+                    spec: document.getElementById('specWait').value,
+                    ncb: document.getElementById('ncb').value,
+                    cons: document.getElementById('consumables').value,
+                    air: document.getElementById('airAmbulance').value,
+                    hc: document.getElementById('healthCheck').value,
+                    end: document.getElementById('endless').value,
+                    rec: document.getElementById('reconstructive').value,
+                    opd: document.getElementById('opd').value,
+                    cash: document.getElementById('hospitalCash').value,
+                    mat: document.getElementById('maternity').value,
+                    matW: document.getElementById('maternityWait').value,
+                    welc: document.getElementById('welcomeDisc').value,
+                    pref: document.getElementById('preferredNetwork').value,
+                    cross: document.getElementById('crossSellDiscount').value,
+                    emp: document.getElementById('employeeDiscount').value,
+                    mems: membersSignature.join('|')
+                });
+                
+                if (currentSignature !== lastCalcSignature || !activeQuoteId) {
+                    activeQuoteId = generateQuoteId(); lastCalcSignature = currentSignature;
+                }
+                document.getElementById('displayQuoteId').innerText = activeQuoteId;
+                document.getElementById('quoteIdContainer').style.display = 'block';
+
+                // TRIGGER BACKGROUND SAVE with fresh location data
+                saveQuoteToBackend(activeQuoteId, data, locCountry, locState, locDistrict, locCity);
+                
+                const gridTarget = document.getElementById('premiumGridTarget');
+                gridTarget.innerHTML = ''; 
+
+                const selectedTenure = parseInt(document.getElementById('tenure').value) || 1;
+
+                for (let yr = 1; yr <= 5; yr++) {
+                    let yrData = data[yr-1];
+                    const headerClass = (yr % 2 === 0) ? 'header-blue' : 'header-purple';
+                    const cardHTML = `
+                    <div class="premium-card">
+                        <div class="p-card-header ${headerClass}">${yr} Year Policy</div>
+                        <div class="p-card-body">
+                            <div class="p-final-container">
+                                <div class="p-final-label">Final Premium</div>
+                                <div class="p-final-amount">₹ ${yrData.prem.toLocaleString('en-IN')}</div>
+                                ${yrData.save > 10 ? `<div class="p-saved-box"><i class="fas fa-check-circle"></i> SAVE: ${yrData.save}%</div>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                    gridTarget.innerHTML += cardHTML;
+                    
+                    if(yr === selectedTenure) { window.selectedTenurePremium = yrData.prem; }
+                }
+
+                const optGrid = document.getElementById('optionals-grid-target'); optGrid.innerHTML = '';
+                const optionalMap = [ { label: 'Consumables', val: document.getElementById('consumables').value, icon: 'fa-box-open' }, { label: 'Air Ambulance', val: document.getElementById('airAmbulance').value, icon: 'fa-plane' }, { label: 'Health Check', val: document.getElementById('healthCheck').value, icon: 'fa-user-md' }, { label: 'Endless SI', val: document.getElementById('endless').value, icon: 'fa-infinity' }, { label: 'Reconstructive', val: document.getElementById('reconstructive').value, icon: 'fa-crutch' }, { label: 'OPD', val: document.getElementById('opd').value, icon: 'fa-clinic-medical' }, { label: 'Hospital Cash', val: document.getElementById('hospitalCash').value, icon: 'fa-money-bill-wave' }, { label: 'Maternity', val: document.getElementById('maternity').value, icon: 'fa-baby' } ];
+                const activeOptionals = optionalMap.filter(o => o.val !== 'Not Opted' && o.val !== 'No');
+                const optSection = document.getElementById('optionals-display-section');
+                if (activeOptionals.length === 0) { optSection.style.display = 'none'; }
+                else { 
+                    optSection.style.display = 'block'; 
+                    activeOptionals.forEach(o => { let valDisplay = o.val; if(o.label === 'Maternity') valDisplay += ` (${document.getElementById('maternityWait').value} Wait)`; optGrid.innerHTML += `<div class="feat-item"><i class="fas ${o.icon} feat-icon"></i><div class="feat-label">${o.label}</div><div class="feat-val">${valDisplay}</div></div>`; }); 
+                }
+
+                const modGrid = document.getElementById('modifiers-grid-target'); modGrid.innerHTML = '';
+                const ncbSel = document.getElementById('ncb');
+                const modifiers = [ { label: 'Room', val: document.getElementById('roomCategory').value, icon: 'fa-bed' }, { label: 'Pre-Hosp', val: '60 Days', icon: 'fa-hourglass-start' }, { label: 'Post-Hosp', val: '90 Days', icon: 'fa-hourglass-end' }, { label: 'PED Wait', val: document.getElementById('pedWait').value, icon: 'fa-history' }, { label: 'Spec. Wait', val: document.getElementById('specWait').value, icon: 'fa-hourglass-half' }, { label: 'NCB/NCD', val: ncbSel.options[ncbSel.selectedIndex].text, icon: 'fa-star' }, { label: 'Zone', val: document.getElementById('zone').value, icon: 'fa-map-marker-alt' } ];
+                modifiers.forEach(m => { modGrid.innerHTML += `<div class="feat-item"><i class="fas ${m.icon} feat-icon"></i><div class="feat-label">${m.label}</div><div class="feat-val">${m.val}</div></div>`; });
+
+                document.getElementById('results-container').style.display = 'block'; 
+                document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                calcBtn.innerHTML = originalBtnHTML;
+                calcBtn.disabled = false;
+            }
+        }
+        
+        document.getElementById('calcBtn').addEventListener('click', calculateAndDisplay);
+
+        async function generatePDFBlob(customerName, si, policyType, combination, zone, tenure, membersStr, salesName = '', salesContact = '') {
+            const overlayRoot = document.getElementById('pdf-overlay-root');
+            const baseSiLabel = document.getElementById('sumInsured').value;
+            const baseSiIdx = SI_LABELS_ORDER.indexOf(baseSiLabel);
+            
+            let targetSIs = [];
+            targetSIs.push({ label: baseSiLabel, desc: "Selected" });
+            if (baseSiIdx + 1 < SI_LABELS_ORDER.length) targetSIs.push({ label: SI_LABELS_ORDER[baseSiIdx + 1], desc: "1 Level Up" });
+            if (baseSiIdx + 2 < SI_LABELS_ORDER.length) targetSIs.push({ label: SI_LABELS_ORDER[baseSiIdx + 2], desc: "2 Levels Up" });
+
+            let tierRowsHTML = '';
+            targetSIs.forEach(siObj => {
+                const premiumData = calculatePremiumFor(siObj.label); 
+                let tdHtml = `<td class="si-col">${siObj.label}<span class="si-sub">${siObj.desc}</span></td>`;
+                for(let i=0; i<5; i++) {
+                    let item = premiumData[i];
+                    let saveHtml = item.save > 10 ? `<div class="tier-save">SAVE ${item.save}%</div>` : '';
+                    tdHtml += `<td><div class="tier-prem">₹ ${item.prem.toLocaleString('en-IN')}</div>${saveHtml}</td>`;
+                }
+                tierRowsHTML += `<tr>${tdHtml}</tr>`;
+            });
+
+            let premStrip = `<table class="pdf-tier-table"><thead><tr><th>Sum Insured</th><th>1 Year</th><th>2 Year</th><th>3 Year</th><th>4 Year</th><th>5 Year</th></tr></thead><tbody>${tierRowsHTML}</tbody></table>`;
+
+            let inbuiltClean = '<div class="pdf-grid-4">';
+            document.querySelectorAll('#inbuilt-section .feat-item').forEach(item => { let iconClass = item.querySelector('i').className; inbuiltClean += `<div class="pdf-feat-box"><div class="pdf-icon-wrap"><i class="${iconClass}"></i></div><div class="pdf-feat-text"><div class="pdf-feat-l">${item.querySelector('.feat-label').innerText}</div><div class="pdf-feat-v">${item.querySelector('.feat-val').innerText}</div></div></div>`; });
+            inbuiltClean += '</div>';
+
+            let colMod = '<div class="pdf-col"><div class="pdf-col-h">Modifiers</div>';
+            const ncbSel = document.getElementById('ncb');
+            const modifiers = [ { k: 'Room', v: document.getElementById('roomCategory').value, i: 'fa-bed' }, { k: 'Pre-Hosp', v: '60 Days', i: 'fa-hourglass-start' }, { k: 'Post-Hosp', v: '90 Days', i: 'fa-hourglass-end' }, { k: 'PED Wait', v: document.getElementById('pedWait').value, i: 'fa-history' }, { k: 'Spec. Wait', v: document.getElementById('specWait').value, i: 'fa-hourglass-half' }, { k: 'NCB/NCD', v: ncbSel.options[ncbSel.selectedIndex].text, i: 'fa-star' } ];
+            modifiers.forEach(m => { colMod += `<div class="pdf-row-item"><div class="pdf-row-left"><i class="fas ${m.i} pdf-row-icon"></i><div class="pdf-row-k">${m.k}</div></div><div class="pdf-row-v">${m.v}</div></div>`; }); colMod += '</div>';
+
+            let colOpt = '<div class="pdf-col"><div class="pdf-col-h">Optionals</div>';
+            const maternityVal = document.getElementById('maternity').value;
+            const optionals = [ { k: 'Consumables', v: document.getElementById('consumables').value, i: 'fa-box-open' }, { k: 'Air Ambulance', v: document.getElementById('airAmbulance').value, i: 'fa-plane' }, { k: 'Health Check', v: document.getElementById('healthCheck').value, i: 'fa-user-md' }, { k: 'Endless SI', v: document.getElementById('endless').value, i: 'fa-infinity' }, { k: 'Reconstructive', v: document.getElementById('reconstructive').value, i: 'fa-crutch' }, { k: 'OPD', v: document.getElementById('opd').value, i: 'fa-clinic-medical' }, { k: 'Hosp. Cash', v: document.getElementById('hospitalCash').value, i: 'fa-money-bill-wave' }, { k: 'Maternity', v: maternityVal, i: 'fa-baby' } ];
+            if(maternityVal !== "Not Opted") { optionals.push({ k: 'New Born Baby', v: 'Included', i: 'fa-baby-carriage' }); optionals.push({ k: 'Child Vaccination', v: 'Included', i: 'fa-syringe' }); }
+            optionals.forEach(o => { let displayVal = o.v; if(o.k === 'Maternity' && o.v !== 'Not Opted') displayVal += ` (${document.getElementById('maternityWait').value} Wait)`; colOpt += `<div class="pdf-row-item"><div class="pdf-row-left"><i class="fas ${o.i} pdf-row-icon"></i><div class="pdf-row-k">${o.k}</div></div><div class="pdf-row-v">${displayVal}</div></div>`; }); colOpt += '</div>';
+
+            const welcomeVal = document.getElementById('welcomeDisc').value; const prefVal = document.getElementById('preferredNetwork').value; const girlChildVal = document.getElementById('hasGirlChild').value === 'true' ? 'Yes' : 'No'; const empVal = document.getElementById('employeeDiscount').value; const crossVal = document.getElementById('crossSellDiscount').value; const zoneVal = document.getElementById('zone').value;
+            let floaterDisp = 'No'; const pt = document.getElementById('policyType').value; if(pt === 'Family Floater') floaterDisp = 'Yes'; else if((pt === 'Individual' || pt === 'Individual Floater') && membersStr.length >= 2) floaterDisp = 'Yes (5%)';
+            let discRows = ''; const addDiscRow = (label, val, icon='fa-check') => { return `<div class="pdf-row-item"><div class="pdf-row-left"><i class="fas ${icon} pdf-row-icon"></i><div class="pdf-row-k">${label}</div></div><div class="pdf-row-v">${val}</div></div>`; };
+            if(welcomeVal === 'Yes') discRows += addDiscRow('Welcome', 'Yes', 'fa-hand-holding-usd'); if(prefVal === 'Preferred Partner') discRows += addDiscRow('Preferred Net.', 'Yes', 'fa-hospital'); if(girlChildVal === 'Yes') discRows += addDiscRow('Girl Child', 'Yes', 'fa-child'); if(empVal === 'Yes') discRows += addDiscRow('SBI Emp.', 'Yes', 'fa-id-badge'); if(crossVal === 'Yes') discRows += addDiscRow('Cross-Sell', 'Yes', 'fa-exchange-alt'); if(zoneVal === 'Zone B') discRows += addDiscRow('Zone B', 'Yes', 'fa-map-marker-alt'); if(floaterDisp !== 'No') discRows += addDiscRow('Floater Disc.', floaterDisp, 'fa-users');
+            let colDisc = `<div class="pdf-col"><div class="pdf-col-h">Discounts</div>${discRows}</div>`;
+
+            let salesBlockHTML = '';
+            if (salesName) {
+                salesBlockHTML = `<div class="pdf-sales-signature"><div><div class="sales-title">Custom Quote Prepared By</div><div class="sales-name">${salesName}</div></div></div>`;
+            }
+
+            overlayRoot.innerHTML = `
+                <div class="pdf-export-wrapper" id="pdf-export-wrapper">
+                    <div class="pdf-cover-page"><img src="alphacoverpage.png" alt="Cover Page"></div>
+                    <div class="pdf-page-container">
+                        <div class="pdf-content-wrapper">
+                            <div class="pdf-header-row">
+                                <div><div class="pdf-title-main">Health Alpha Select</div><div class="pdf-subtitle">Premium Quote Calculation</div></div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:11px; color:#764ba2; font-weight: 800;">ID: ${activeQuoteId || 'HA-DRAFT'}</div>
+                                    <div style="font-size:10px;">Date: ${new Date().toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="pdf-sec-title">1. Quote Details</div>
+                            <table class="pdf-details-tbl">
+                                <tr><td class="lbl">Customer</td><td class="val">${customerName}</td><td class="lbl">Selected SI</td><td class="val">${si}</td></tr>
+                                <tr><td class="lbl">Type</td><td class="val">${policyType}</td><td class="lbl">Combination</td><td class="val">${combination}</td></tr>
+                                <tr><td class="lbl">Zone/Tenure</td><td class="val">${zone} / ${tenure}</td><td class="lbl">Members</td><td class="val">${membersStr.join(', ')}</td></tr>
+                            </table>
+                            <div class="pdf-sec-title">2. Premium Multi-Tier Summary (Cumulative)</div>
+                            ${premStrip}
+                            <div class="pdf-sec-title">3. Inbuilt Features</div>
+                            ${inbuiltClean}
+                            <div class="pdf-cols-wrapper">${colMod}${colOpt}${colDisc}</div>
+                            ${salesBlockHTML}
+                            <div class="pdf-footer">*Disclaimer: This quote is indicative and based on the information provided. Final premium is subject to underwriting and health status. Benefits mentioned are subject to policy terms and conditions.</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            overlayRoot.style.display = 'block'; window.scrollTo(0, 0);
+            const element = document.getElementById('pdf-export-wrapper');
+            const opt = { margin: 0, filename: `Health_Alpha_Quote_${customerName}.pdf`, image: { type: 'jpeg', quality: 0.99 }, html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 }, jsPDF: { unit: 'px', format: [794, 1122], orientation: 'portrait' }, pagebreak: { mode: 'css' } };
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+            overlayRoot.style.display = 'none'; return pdfBlob;
+        }
+
+        async function handlePdfAction(actionType) {
+            const customerName = document.getElementById('customerName').value || "Customer";
+            const si = document.getElementById('sumInsured').value;
+            const policyType = document.getElementById('policyType').value;
+            const combination = document.getElementById('combination').value;
+            const zone = document.getElementById('zone').value;
+            const tenureSelect = document.getElementById('tenure');
+            const tenureText = tenureSelect.options[tenureSelect.selectedIndex].text;
+            
+            // AUTOMATICALLY GRAB THE LOCKED NAME
+            const salesName = localStorage.getItem("salesBuddyUserName") || "Authorized Partner";
+            const salesContact = ""; // Left blank as requested
+            
+            let membersStr = []; let waAges = [];
+            document.querySelectorAll('.member-card').forEach(card => { 
+                const age = card.querySelector('.age-input').value; 
+                if(age) { membersStr.push(`${age}y`); waAges.push(age); } 
+            });
+            
+            let finalPremium = "N/A"; 
+            if (window.selectedTenurePremium) finalPremium = "₹ " + window.selectedTenurePremium.toLocaleString('en-IN');
+            
+            const pdfBlob = await generatePDFBlob(customerName, si, policyType, combination, zone, tenureText, membersStr, salesName, salesContact);
+            const fileName = `Health_Alpha_Quote_${customerName}.pdf`;
+
+            if (actionType === 'download') {
+                const url = URL.createObjectURL(pdfBlob); 
+                const a = document.createElement('a'); 
+                a.href = url; a.download = fileName; a.click(); 
+                URL.revokeObjectURL(url);
+            } else if (actionType === 'whatsapp') {
+                let salesFooter = `\n-----------------------------\n*Quote Prepared By:*\n*Name:* ${salesName}`;
+                const msg = `*Health Alpha Select Quote* 🏥\n\n*Customer Name:* ${customerName}\n*Quote ID:* ${activeQuoteId || 'N/A'}\n*${tenureText} Total Premium:* ${finalPremium} \n-----------------------------\n*Sum Insured:* ${si}\n*Policy Type:* ${policyType}\n*Zone / Tenure:* ${zone} / ${tenureText}\n*Combination:* ${combination}\n*Member Ages:* ${waAges.join(', ')}${salesFooter}\n-----------------------------\n_Please find the attached quote for more details_`;
+                
+                const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try { await navigator.share({ files: [file], title: 'Health Alpha Quote', text: msg }); } 
+                    catch (err) { 
+                        const url = URL.createObjectURL(pdfBlob); const a = document.createElement('a'); a.href = url; a.download = fileName; a.click(); 
+                        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank'); 
+                    }
+                } else {
+                    const url = URL.createObjectURL(pdfBlob); const a = document.createElement('a'); a.href = url; a.download = fileName; a.click();
+                    showAlert("On this device/browser, we downloaded the PDF. Please attach it manually to WhatsApp.");
+                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                }
+            }
+        }
+
+        document.getElementById('pdfBtn').addEventListener('click', () => handlePdfAction('download'));
+        document.getElementById('waBtn').addEventListener('click', () => handlePdfAction('whatsapp'));
+        
+        document.getElementById('genMembersBtn').addEventListener('click', renderMemberRows);
+        document.getElementById('resetBtn').addEventListener('click', () => window.location.reload());
+        document.getElementById('policyType').addEventListener('change', () => { enforcePolicyCombination(); renderMemberRows(); });
+        document.getElementById('combination').addEventListener('change', renderMemberRows);
+        document.getElementById('sumInsured').addEventListener('change', updateOptionalVisibility);
+        document.getElementById('maternity').addEventListener('change', updateOptionalVisibility);
+
+        initToggles(); enforcePolicyCombination(); renderMemberRows(); updateOptionalVisibility(); checkGirlChildDiscount();
+    </script>
+</body>
+</html>

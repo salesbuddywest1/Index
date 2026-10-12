@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro EMI Worksheet</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --dark: #1e293b;
+            --light: #f1f5f9;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        #dynamicInputs {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .helper-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-calc {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            display: none;
+            margin-top: 25px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Results Styling */
+        #resultsArea {
+            margin-top: 25px;
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .badge {
+            background: #dbeafe;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .emi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .emi-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .emi-months {
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .emi-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .draw-date-info {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .disclaimer-text {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>🏥 EMI Worksheet</h2>
+        <p>Premium Financing Calculator</p>
+    </div>
+    
+    <div class="form-group">
+        <label>Customer Name</label>
+        <input type="text" id="customerName" placeholder="e.g. Rahul Sharma">
+    </div>
+
+    <div class="form-group">
+        <label>Product</label>
+        <select id="productSelect" onchange="generateInputs()">
+            <option value="" selected disabled>-- Select Product --</option>
+            <option value="Super Health">Super Health</option>
+            <option value="Health Alpha">Health Alpha</option>
+        </select>
+    </div>
+
+    <div id="dynamicInputs" style="display:none;"></div>
+
+    <button class="btn-calc" onclick="calculateAll()">Calculate Options</button>
+
+    <div id="resultsArea"></div>
+
+    <button id="whatsappBtn" class="btn-whatsapp" onclick="sendWhatsapp()">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        Share on WhatsApp
+    </button>
+</div>
+    </button>
+
+    <div class="draw-date-info">
+        📅 EMI Draw Date: 5th of Every Month
+    </div>
+
+    <div class="disclaimer-text">
+        Disclaimer: This is a tentative one, approval and final emi will be based on the cibil score and related process.
+    </div>
+</div>
+
+<script>
+    // Configuration
+    const config = {
+        "Super Health": { years: [1, 2, 3] },
+        "Health Alpha": { years: [1, 2, 3, 4, 5] }
+    };
+
+    const tenureRules = {
+        1: [3],
+        2: [3, 6],
+        3: [3, 6, 9],
+        4: [3, 6, 9],
+        5: [3, 6, 9]
+    };
+
+    let calculatedData = []; 
+
+    // 1. Generate Inputs
+    function generateInputs() {
+        const product = document.getElementById('productSelect').value;
+        const container = document.getElementById('dynamicInputs');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const resultsArea = document.getElementById('resultsArea');
+        
+        container.innerHTML = '';
+        resultsArea.innerHTML = '';
+        whatsappBtn.style.display = 'none';
+        calculatedData = [];
+
+        if (!product) {
+            container.style.display = 'none';
+            return;
+        }
+
+        container.style.display = 'block';
+        const years = config[product].years;
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'helper-text';
+        header.innerHTML = 'Enter Premium for relevant years. <strong>Min: ₹25,000</strong>';
+        container.appendChild(header);
+
+        years.forEach(year => {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.style.marginBottom = '10px';
+            div.innerHTML = `
+                <label style="font-weight:500;">Year ${year} Premium (₹)</label>
+                <input type="number" id="premium_${year}" placeholder="Enter amount..." min="25000">
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // 2. Format Currency
+    const toINR = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+
+    // 3. Calc Logic
+    function calculatePMT(principal, months) {
+        if (principal <= 0) return 0;
+        const rate = 18 / 12 / 100; // 18% Reducing
+        return (principal * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+    }
+
+    // 4. Calculate
+    function calculateAll() {
+        const product = document.getElementById('productSelect').value;
+        const resultsArea = document.getElementById('resultsArea');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        
+        if (!product) { alert("Please select a product"); return; }
+
+        resultsArea.innerHTML = '';
+        calculatedData = [];
+        let hasValidData = false;
+
+        const years = config[product].years;
+
+        years.forEach(year => {
+            const inputId = `premium_${year}`;
+            const premiumVal = parseFloat(document.getElementById(inputId).value);
+
+            if (premiumVal && premiumVal >= 25000) {
+                hasValidData = true;
+
+                // DP Logic: Max(20%, 3000)
+                const dpCalc = Math.max(premiumVal * 0.20, 3000);
+                const loanAmount = premiumVal - dpCalc;
+                const availableMonths = tenureRules[year];
+                
+                let emiHtml = '';
+                let emiTextObj = {}; // For WhatsApp
+
+                availableMonths.forEach(m => {
+                    const emiVal = calculatePMT(loanAmount, m);
+                    emiHtml += `
+                        <div class="emi-item">
+                            <span class="emi-months">👉 ${m} Months</span>
+                            <span class="emi-price">${toINR(emiVal)} / mo</span>
+                        </div>
+                    `;
+                    emiTextObj[m] = toINR(emiVal);
+                });
+
+                // HTML Output
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        ${year} Year Plan <span class="badge">Reducing</span>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Total Premium</div>
+                            <div class="stat-value">${toINR(premiumVal)}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Down Payment</div>
+                            <div class="stat-value" style="color:var(--success);">${toINR(dpCalc)}</div>
+                        </div>
+                    </div>
+                    <div class="emi-list">
+                        ${emiHtml}
+                    </div>
+                `;
+                resultsArea.appendChild(card);
+
+                // Store Data
+                calculatedData.push({
+                    year: year,
+                    premium: toINR(premiumVal),
+                    dp: toINR(dpCalc),
+                    emis: emiTextObj
+                });
+            }
+        });
+
+        if (hasValidData) {
+            whatsappBtn.style.display = 'flex';
+        } else {
+            alert("Please enter a valid premium (Min 25000) for at least one year.");
+        }
+    }
+
+    // 5. Advanced WhatsApp Formatter
+    function sendWhatsapp() {
+        const name = document.getElementById('customerName').value || "Valued Client";
+        const product = document.getElementById('productSelect').value;
+
+        // Header
+        let text = `📋 *EMI PLAN PROPOSAL*%0A`;
+        text += `👤 *Customer:* ${name}%0A`;
+        text += `🏥 *Plan:* ${product}%0A%0A`;
+        
+        text += `Here are the finance options based on your premium:%0A`;
+
+        // Loop through years
+        calculatedData.forEach((item, index) => {
+            // Visual Separator
+            text += `━━━━━━━━━━━━━━━━━━%0A`;
+            
+            // Year Header
+            text += `🗓️ *${item.year} YEAR POLICY*%0A`;
+            text += `💰 *Premium:* ${item.premium}%0A`;
+            text += `📉 *Down Pay:* ${item.dp}%0A%0A`;
+            
+            // EMI Options
+            text += `*EMI Options:*%0A`;
+            for (const [month, value] of Object.entries(item.emis)) {
+                text += `👉 ${month} Months : *${value}*%0A`;
+            }
+            text += `%0A`; // Extra space
+        });
+
+        // Footer
+        text += `━━━━━━━━━━━━━━━━━━%0A`;
+        text += `_Please let me know which tenure works best for you!_`;
+
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+</script>
+
+</body>
+</html>
